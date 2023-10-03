@@ -31,13 +31,13 @@ export default function Mission() {
   ];
 
   return (
-    <div className="relative bg-white h-[80vh] flex flex-col z-20">
+    <div className="relative bg-white flex flex-col z-20 md:h-[80vh]">
       <div className="text-4xl text-center font-bold text-black z-30">
         Our mission
       </div>
       <div className="md:flex block justify-center gap-10 z-30 mt-[20px]">
         {missionCards.map((card) => (
-          <div className="card bg-white md:w-[25%] w-[90%] m-5 h-[50vh] shadow-xl p-7 z-30">
+          <div className="card bg-white md:w-[25%] w-[90%] m-5 h-[50vh] shadow-xl p-7 z-30 border">
             <img className="w-16 h-16" src={card.icon} alt="arrow" />
             <div className="card-title text-lg font-bold text-primary pt-3 ">
               {card.title}
