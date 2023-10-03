@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useSpring } from "framer-motion";
 
-const BIG_SIZE = 100;
-const SMALL_SIZE = 15;
+const BIG_SIZE = 90;
+const SMALL_SIZE = 2;
 const PER_PX = 0.3;
 
 export default function Dot({
@@ -31,7 +31,7 @@ export default function Dot({
     <div ref={dotRef} className="relative">
       <motion.div
         className="
-    bg-green-600 rounded-full absolute -translate-y-1/2 -translate-x-1/2"
+        bg-primary rounded-full absolute -translate-y-1/2 -translate-x-1/2 z-0"
         style={{ width: size, height: size }}
       ></motion.div>
     </div>
