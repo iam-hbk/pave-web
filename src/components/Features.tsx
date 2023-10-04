@@ -9,7 +9,7 @@ export default function Features() {
         <img className="max-w-xs md:max-w-full" src="/assets/svgs/phone_features.svg" alt="phone" />
       </div>
 
-      <div className="w-full md:w-[40%] p-5 md:p-20 bg-red-100 md:ml-[-150px] rounded-lg z-0 bg-[#bad3ff] order-1 md:order-2">
+      <div className="w-full md:w-[40%] p-5 md:p-20  md:ml-[-150px] rounded-lg z-0 bg-[#adc9fa] order-1 md:order-2">
         <ul className="ml-10">
           {[
             "Incentive-driven Participation",
