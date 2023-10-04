@@ -1,5 +1,5 @@
 "use client"; // This is a client component 👈🏽
-
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import Dot from "./Dot";
 
@@ -31,14 +31,23 @@ export default function Mission() {
   ];
 
   return (
-    <div className="relative bg-white flex flex-col z-20 md:h-[80vh]">
+    <div className="relative bg-white flex flex-col z-20 h-[100vh]">
       <div className="text-4xl text-center font-bold text-black z-30">
         Our mission
       </div>
       <div className="md:flex block justify-center gap-10 z-30 mt-[20px]">
-        {missionCards.map((card) => (
-          <div className="card bg-white md:w-[25%] w-[90%] m-5 h-[50vh] shadow-xl p-7 z-30 border">
-            <img className="w-16 h-16" src={card.icon} alt="arrow" />
+        {missionCards.map((card, index) => (
+          <div
+            key={index}
+            className="card bg-white md:w-[25%] w-[90%] m-5  shadow-xl p-7 z-30 border"
+          >
+            <Image
+              width={100}
+              height={100}
+              className="w-16 h-16"
+              src={card.icon}
+              alt="arrow"
+            />
             <div className="card-title text-lg font-bold text-primary pt-3 ">
               {card.title}
             </div>
@@ -46,7 +55,7 @@ export default function Mission() {
           </div>
         ))}
       </div>
-      <div className="hidden md:flex absolute flex flex-wrap w-[1080] gap-16 p-12 z-10">
+      <div className="hidden md:flex absolute flex-wrap w-[1080] gap-16 p-12 z-10">
         {Array.from({ length: 184 }, (_, i) => (
           <Dot key={i} mousePos={mousePos} />
         ))}
