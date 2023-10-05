@@ -1,4 +1,5 @@
 "use client"; // This is a client component 👈🏽
+import Image from "next/image";
 
 import { useState, useEffect } from "react";
 import Dot from "./Dot";
@@ -36,9 +37,12 @@ export default function Mission() {
         Our mission
       </div>
       <div className="md:flex block justify-center gap-10 z-30 mt-[20px]">
-        {missionCards.map((card) => (
-          <div className="card bg-white md:w-[25%] w-[90%] m-5 h-[50vh] shadow-xl p-7 z-30 border">
-            <img className="w-16 h-16" src={card.icon} alt="arrow" />
+        {missionCards.map((card, index) => (
+          <div
+            key={index}
+            className="card bg-white md:w-[25%] w-[90%] m-5 h-[50vh] shadow-xl p-7 z-30 border"
+          >
+            <Image width={10} height={10} className="w-16 h-16" src={card.icon} alt="arrow" />
             <div className="card-title text-lg font-bold text-primary pt-3 ">
               {card.title}
             </div>

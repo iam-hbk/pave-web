@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Welcome() {
   return (
     <div className="bg-[#fff9e6] h-[80vh] flex flex-row justify-center items-center mb-5">
@@ -9,7 +11,7 @@ export default function Welcome() {
           <button className="btn btn-primary mt-4">Sign up</button>
         </div>
         <div className="flex justify-center items-center hidden md:flex">
-          <img src="/assets/svgs/Education.svg" alt="Welcome" />
+          <Image width={100} height={100} src="/assets/svgs/Education.svg" alt="Welcome" />
         </div>
       </div>
     </div>

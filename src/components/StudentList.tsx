@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function StudentList() {
   return (
     <div className="w-1/3 bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -16,7 +18,9 @@ export default function StudentList() {
           key={idx}
           className="flex items-center bg-gray-200 p-4 rounded-lg mb-4 hover:shadow-lg transition-shadow duration-300"
         >
-          <img
+          <Image
+            width={100}
+            height={100}
             className="w-10 h-10 object-cover rounded-full"
             src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80"
             alt={name}

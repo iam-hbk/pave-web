@@ -1,9 +1,13 @@
+import Image from "next/image";
+
 export default function Sidebar() {
   return (
     <aside className="w-1/5 p-6 bg-white shadow-xl">
       {/* Logo */}
       <div className="mb-6">
-        <img
+        <Image
+          width={100}
+          height={100}
           src="/assets/svgs/Pave_Logo.svg"
           alt="Logo"
           className="w-32 h-auto mb-4"

@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Navbar() {
   return (
     <div className="navbar bg-white flex shadow relative z-10">
       <div className="logo w-full md:w-2/5 flex justify-center items-center">
-        <img src="/assets/svgs/Pave_Logo.svg" alt="Pave Logo" />
+        <Image  width={100} height={100} src="/assets/svgs/Pave_Logo.svg" alt="Pave Logo" />
       </div>
       <div className="hidden md:flex md:w-3/5">
         <div className="links w-1/2 flex justify-center items-center px-4">

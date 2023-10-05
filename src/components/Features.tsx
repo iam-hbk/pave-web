@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Features() {
   return (
     <div className="bg-[#fff9e6] w-full">
@@ -19,7 +21,7 @@ export default function Features() {
           ].map((feature) => (
             <li key={feature}>
               <div className="flex justify-start items-center">
-                <img src="/assets/svgs/arrow_change.svg" alt="arrow" />
+                <Image width={100} height={100} src="/assets/svgs/arrow_change.svg" alt="arrow" />
                 <div className="text-xl text-white p-2">{feature}</div>
               </div>
             </li>
