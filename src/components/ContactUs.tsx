@@ -1,9 +1,11 @@
+import Image from "next/image";
+
 export default function ContactUs() {
   return (
     <div className=" bg-[#adc9fa]">
       <div className="flex justify-center items-center h-[80vh]">
         <div className="hidden md:flex w-1/2 justify-center items-center">
-          <img src="/assets/svgs/contact.svg" />
+          <Image width={100} height={100} src="/assets/svgs/contact.svg" alt="" />
         </div>
         <div className="flex w-1/2 justify-start  flex-col">
           <div className="text-2xl text-white font-bold">Contact Us</div>
