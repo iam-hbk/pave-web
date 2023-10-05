@@ -8,6 +8,7 @@ import { useQRCode } from "next-qrcode";
 import Sidebar from "@/components/Sidebar";
 import StudentList from "@/components/StudentList";
 import { getCurrentLongLat } from "@/utils/helpers";
+import Link from "next/link";
 
 interface COORDS {
   lat: number;
@@ -191,9 +192,11 @@ export default function Home() {
             <h1 className="text-xl font-semibold">Dashboard</h1>
             <div className="flex items-center space-x-4">
               <div className="text-gray-500">Dr Fanie Radebe</div>
-              <button className="btn btn-primary transition-all duration-300 hover:shadow-lg">
-                New quiz
-              </button>
+              <Link href='quiz' >
+                <button className="btn btn-primary transition-all duration-300 hover:shadow-lg">
+                  New quiz
+                </button>
+              </Link>
             </div>
           </div>
 

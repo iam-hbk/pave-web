@@ -42,7 +42,7 @@ export default function Mission() {
             key={index}
             className="card bg-white md:w-[25%] w-[90%] m-5 h-[50vh] shadow-xl p-7 z-30 border"
           >
-            <Image width={10} height={10} className="w-16 h-16" src={card.icon} alt="arrow" />
+            <Image width={61} height={61} className="w-16 h-16" src={card.icon} alt="arrow" />
             <div className="card-title text-lg font-bold text-primary pt-3 ">
               {card.title}
             </div>
