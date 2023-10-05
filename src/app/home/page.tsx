@@ -6,20 +6,35 @@ import axios from "axios";
 import { useQRCode } from "next-qrcode";
 import Sidebar from "@/components/Sidebar";
 import StudentList from "@/components/StudentList";
+import { getCurrentLongLat } from "@/utils/helpers";
+
+interface COORDS {
+  lat: number;
+  long: number;
+}
 
 export default function Home() {
   const { SVG } = useQRCode();
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [coords, setCoords] = useState<COORDS>(); // [lat, long
   const [QRCode_data, setQRCode_data] = useState("");
-
+  const [submitting, setSubmitting] = useState(false);
+  const getCoordinates = async () => {
+    const coordinates = await getCurrentLongLat();
+    if (coordinates) {
+      setCoords(coordinates);
+    }
+  };
   const handleSubmit = async () => {
     const startDateTime = new Date(startTime);
     const endDateTime = new Date(endTime);
+    await getCoordinates();
     console.log(startTime, endTime);
+    if (!coords) return alert("Please enable location services and try again");
     const options = {
       method: "POST",
-      url: "localhost:4001/api/class-session/create",
+      url: "http://localhost:4001/api/class-session/create",
       headers: {
         Accept: "*/*",
 
@@ -27,16 +42,19 @@ export default function Home() {
       },
       data: {
         module: "651835453acb0d7dd3434fe0",
-        qrCodeOrigin: { lat: 40.73061, long: -73.935242 },
+        qrCodeOrigin: coords || { lat: 40.73061, long: -73.935242 },
         classStartTime: startDateTime.toISOString(),
         classEndTime: endDateTime.toISOString(),
       },
     };
 
+    console.log("COORDS ==>", coords);
+
     try {
+      setSubmitting(true);
       const response = await axios.request(options);
       console.log(response.data);
-      const data = response.data;
+      const data = response.data.data;
       setQRCode_data(JSON.stringify(data));
       console.log("QR CODE DATA : " + QRCode_data);
 
@@ -47,6 +65,8 @@ export default function Home() {
       QR_modal.showModal();
     } catch (error) {
       console.error(error);
+    } finally {
+      setSubmitting(false);
     }
   };
   return (
@@ -99,12 +119,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 flex items-center">
             <button
               type="submit"
-              className="btn btn-primary"
+              className={`btn btn-primary `}
               onClick={handleSubmit}
+              disabled={submitting}
             >
+              {submitting && <span className="loading loading-spinner"></span>}
               Submit
             </button>
             <button
