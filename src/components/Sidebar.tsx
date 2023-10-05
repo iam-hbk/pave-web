@@ -13,7 +13,6 @@ export default function Sidebar() {
           className="w-32 h-auto mb-4"
         />
       </div>
-
       <div className="flex items-center mb-6 space-x-2">
         <button className="btn text-primary">☰</button>
         <button className="btn text-primary">❌</button>
