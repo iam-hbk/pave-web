@@ -1,49 +1,187 @@
 // pages/index.js
+"use client"; // This is a client component 👈🏽
+import Image from "next/image";
 import Head from "next/head";
+import { useState } from "react";
+import axios from "axios";
+import { useQRCode } from "next-qrcode";
+import Sidebar from "@/components/Sidebar";
+import StudentList from "@/components/StudentList";
+import { getCurrentLongLat } from "@/utils/helpers";
+
+interface COORDS {
+  lat: number;
+  long: number;
+}
 
 export default function Home() {
+  const { SVG } = useQRCode();
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [coords, setCoords] = useState<COORDS>(); // [lat, long
+  const [QRCode_data, setQRCode_data] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const getCoordinates = async () => {
+    const coordinates = await getCurrentLongLat();
+    if (coordinates) {
+      setCoords(coordinates);
+    }
+  };
+  const handleSubmit = async () => {
+    const startDateTime = new Date(startTime);
+    const endDateTime = new Date(endTime);
+    await getCoordinates();
+    console.log(startTime, endTime);
+    if (!coords) return alert("Please enable location services and try again");
+    const options = {
+      method: "POST",
+      url: "http://localhost:4001/api/class-session/create",
+      headers: {
+        Accept: "*/*",
+
+        "Content-Type": "application/json",
+      },
+      data: {
+        module: "651835453acb0d7dd3434fe0",
+        qrCodeOrigin: coords || { lat: 40.73061, long: -73.935242 },
+        classStartTime: startDateTime.toISOString(),
+        classEndTime: endDateTime.toISOString(),
+      },
+    };
+
+    console.log("COORDS ==>", coords);
+
+    try {
+      setSubmitting(true);
+      const response = await axios.request(options);
+      console.log(response.data);
+      const data = response.data.data;
+      setQRCode_data(JSON.stringify(data));
+      console.log("QR CODE DATA : " + QRCode_data);
+
+      const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
+      modal.close();
+
+      const QR_modal = document.getElementById("QR_Modal") as HTMLDialogElement;
+      QR_modal.showModal();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-100 flex transition-all duration-300">
       <Head>
         <title>Dashboard</title>
       </Head>
-
       {/* Sidebar */}
+      <Sidebar />
+      {/* New session modal */}
+      <dialog id="my_modal_1" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">New Session</h3>
+          <p className="py-4">Please enter the details</p>
 
-      <aside className="w-1/5 p-6 bg-white shadow-xl">
-        {/* Logo */}
-        <div className="mb-6">
-          <img
-            src="/assets/svgs/Pave_Logo.svg"
-            alt="Logo"
-            className="w-32 h-auto mb-4"
-          />
-        </div>
-
-        <div className="flex items-center mb-6 space-x-2">
-          <button className="btn text-primary">☰</button>
-          <button className="btn text-primary">❌</button>
-        </div>
-        <nav className="space-y-4">
-          {["Dashboard", "Quizzes", "Students", "Results", "Help"].map(
-            (item) => (
-              <a
-                key={item}
-                href="#"
-                className="block p-2 rounded hover:bg-gray-100 transition-all duration-300"
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="start-time"
+                className="block text-sm font-medium text-gray-700"
               >
-                {item}
-              </a>
-            )
-          )}
-          <a
-            href="#"
-            className="block p-2 rounded hover:bg-gray-100 transition-all duration-300"
-          >
-            New Attendance
-          </a>
-        </nav>
-      </aside>
+                Class Start Time
+              </label>
+              <input
+                type="datetime-local"
+                id="start-time"
+                name="start-time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="mt-1 p-2 w-full border rounded-md"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="end-time"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Class End Time
+              </label>
+
+              <input
+                type="datetime-local"
+                id="end-time"
+                name="end-time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="mt-1 p-2 w-full border rounded-md"
+              />
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center">
+            <button
+              type="submit"
+              className={`btn btn-primary `}
+              onClick={handleSubmit}
+              disabled={submitting}
+            >
+              {submitting && <span className="loading loading-spinner"></span>}
+              Submit
+            </button>
+            <button
+              type="button"
+              className="btn ml-2"
+              onClick={() => {
+                const modal = document.getElementById(
+                  "my_modal_1"
+                ) as HTMLDialogElement;
+                if (modal) modal.close();
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </dialog>
+      {/* QR code modal */}
+      <dialog id="QR_Modal" className="modal">
+        <div className="flex flex-col justify-center align-center modal-box w-auto">
+          <div>
+            {QRCode_data && QRCode_data.length > 0 && (
+              <SVG
+                text={QRCode_data}
+                options={{
+                  margin: 2,
+                  width: 300,
+                  color: {
+                    // dark: "#010599FF",
+                    // light: "#FFBF60FF",
+                  },
+                }}
+              />
+            )}
+          </div>
+          <div>
+            {/* Close button */}
+
+            <button
+              type="button"
+              className="btn ml-2"
+              p-10
+              onClick={() => {
+                const modal = document.getElementById(
+                  "QR_Modal"
+                ) as HTMLDialogElement;
+                if (modal) modal.close();
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </dialog>
 
       {/* Main Content */}
       <main className="flex-1 p-6 flex transition-all duration-300">
@@ -67,7 +205,9 @@ export default function Home() {
                 key={idx}
                 className="p-4 bg-gray-200 rounded-lg flex items-center justify-between mb-4 space-x-4 hover:shadow-lg transition-shadow duration-300"
               >
-                <img
+                <Image
+                  width={100}
+                  height={100}
                   className="w-20 h-20 object-cover rounded"
                   src="https://images.unsplash.com/photo-1662120455989-5a433cec9980?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1914&q=80"
                   alt="Quiz Image"
@@ -113,37 +253,7 @@ export default function Home() {
         </div>
 
         {/* Students List */}
-        <div className="w-1/3 bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-semibold">Students List</h2>
-            <button className="btn btn-outline btn-primary">Directory →</button>
-          </div>
-
-          {[
-            "Emmanuel James",
-            "Alice Jasmine",
-            "Harrison Menlaye",
-            "Jones Doherty",
-          ].map((name, idx) => (
-            <div
-              key={idx}
-              className="flex items-center bg-gray-200 p-4 rounded-lg mb-4 hover:shadow-lg transition-shadow duration-300"
-            >
-              <img
-                className="w-10 h-10 object-cover rounded-full"
-                src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80"
-                alt={name}
-              />
-              <div className="ml-4 flex-1">
-                <p className="font-medium">{name}</p>
-                <p>
-                  Class rank: {idx + 1}th | Average score: {80 + idx}%
-                </p>
-              </div>
-              <button className="btn btn-primary">Profile</button>
-            </div>
-          ))}
-        </div>
+        <StudentList />
       </main>
     </div>
   );

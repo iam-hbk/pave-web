@@ -17,24 +17,24 @@ export default function Features() {
           />
         </div>
 
-        <div className="w-full md:w-[40%] p-5 md:p-20  md:ml-[-150px] rounded-lg z-0 bg-[#adc9fa] order-1 md:order-2">
-          <ul className="ml-10">
-            {[
-              "Incentive-driven Participation",
-              "Empowering Educators",
-              "Seamless Mobile Experience",
-              "Interactive Web Platform",
-            ].map((feature) => (
-              <li key={feature}>
-                <div className="flex justify-start items-center">
-                  <Image height={50} width={50} src="/assets/svgs/arrow_change.svg" alt="arrow" />
-                  <div className="text-xl text-white p-2">{feature}</div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="w-full md:w-[40%] p-5 md:p-20  md:ml-[-150px] rounded-lg z-0 bg-[#adc9fa] order-1 md:order-2">
+        <ul className="ml-10">
+          {[
+            "Incentive-driven Participation",
+            "Empowering Educators",
+            "Seamless Mobile Experience",
+            "Interactive Web Platform",
+          ].map((feature) => (
+            <li key={feature}>
+              <div className="flex justify-start items-center">
+                <Image width={100} height={100} src="/assets/svgs/arrow_change.svg" alt="arrow" />
+                <div className="text-xl text-white p-2">{feature}</div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
+  </div>
   );
 }
