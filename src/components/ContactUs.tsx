@@ -10,7 +10,7 @@ export default function ContactUs() {
         <div className="flex w-1/2 justify-start  flex-col">
           <div className="text-2xl text-white font-bold">Contact Us</div>
           <div className="text-white">
-            Have questions or need assistance? We're here to help
+            Have questions or need assistance? We&apos;re here to help
           </div>
           <input
             type="text"
