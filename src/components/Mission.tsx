@@ -32,7 +32,7 @@ export default function Mission() {
   ];
 
   return (
-    <div className="relative bg-white flex flex-col z-20 md:h-[80vh]">
+    <div className="relative bg-white flex flex-col z-20 h-[100vh]">
       <div className="text-4xl text-center font-bold text-black z-30">
         Our mission
       </div>
@@ -50,7 +50,7 @@ export default function Mission() {
           </div>
         ))}
       </div>
-      <div className="hidden md:flex absolute flex flex-wrap w-[1080] gap-16 p-12 z-10">
+      <div className="hidden md:flex absolute flex-wrap w-[1080] gap-16 p-12 z-10">
         {Array.from({ length: 184 }, (_, i) => (
           <Dot key={i} mousePos={mousePos} />
         ))}
