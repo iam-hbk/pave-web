@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { connectSocket, disconnectSocket } from "@/utils/apis/socket";
 
 const DashboardPage: React.FC = () => {

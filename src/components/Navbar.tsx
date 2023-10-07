@@ -21,10 +21,10 @@ export default function Navbar() {
           </a>
         </div>
         <div className="more-links w-1/2 flex justify-center gap-3 items-center px-4">
-          <Link href={"/dashboard/home"} className="btn btn-ghost normal-case text-md">
+          <Link href={"/dashboard"} className="btn btn-ghost normal-case text-md">
             Sign Up
           </Link>
-          <Link href="/dashboard/home" className="btn normal-case text-md btn-primary">
+          <Link href="/dashboard" className="btn normal-case text-md btn-primary">
             Login
           </Link>
         </div>

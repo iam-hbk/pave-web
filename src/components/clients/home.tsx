@@ -35,7 +35,7 @@ export default function Home() {
 
     try {
       setSubmitting(true);
-      let dataToSubmit: CreateClassSession = {
+      let dataToSubmit: any = {
         moduleId: "651835453acb0d7dd3434fe0",
         coords,
         startDateTime,
@@ -54,14 +54,14 @@ export default function Home() {
     }
   };
   return (
-    <div className="min-h-screen bg-gray-100 flex  transition-all duration-300">
+    <div className="flex min-h-screen bg-gray-100  transition-all duration-300">
       <Head>
         <title>Dashboard</title>
       </Head>
       {/* New session modal */}
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">New Session</h3>
+          <h3 className="text-lg font-bold">New Session</h3>
           <p className="py-4">Please enter the details</p>
 
           <div className="space-y-4">
@@ -78,7 +78,7 @@ export default function Home() {
                 name="start-time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="mt-1 p-2 w-full border rounded-md"
+                className="mt-1 w-full rounded-md border p-2"
               />
             </div>
 
@@ -96,7 +96,7 @@ export default function Home() {
                 name="end-time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="mt-1 p-2 w-full border rounded-md"
+                className="mt-1 w-full rounded-md border p-2"
               />
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function Home() {
               className="btn ml-2"
               onClick={() => {
                 const modal = document.getElementById(
-                  "my_modal_1"
+                  "my_modal_1",
                 ) as HTMLDialogElement;
                 if (modal) modal.close();
               }}
@@ -135,10 +135,10 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 p-6 flex transition-all lg:flex-row lg:gap-1 gap-5 flex-col duration-300">
-        <div className="bg-white p-6 rounded-xl shadow-md w-2/3 mr-4">
+      <main className="flex flex-1 flex-col gap-5 p-6 transition-all duration-300 lg:flex-row lg:gap-1">
+        <div className="mr-4 w-2/3 rounded-xl bg-white p-6 shadow-md">
           {/* Header */}
-          <div className="flex justify-between items-center mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <h1 className="text-xl font-semibold">Dashboard</h1>
             <div className="flex items-center space-x-4">
               <div className="text-gray-500">Dr Fanie Radebe</div>
@@ -153,16 +153,16 @@ export default function Home() {
 
           {/* Upcoming Quizzes */}
           <section className="mb-6">
-            <h2 className="text-lg font-semibold mb-4">Upcoming quizzes</h2>
+            <h2 className="mb-4 text-lg font-semibold">Upcoming quizzes</h2>
             {[1, 2].map((quiz, idx) => (
               <div
                 key={idx}
-                className="p-4 bg-gray-200 rounded-lg flex items-center justify-between mb-4 space-x-4 hover:shadow-lg transition-shadow duration-300"
+                className="mb-4 flex items-center justify-between space-x-4 rounded-lg bg-gray-200 p-4 transition-shadow duration-300 hover:shadow-lg"
               >
                 <Image
                   width={100}
                   height={100}
-                  className="w-20 h-20 object-cover rounded"
+                  className="h-20 w-20 rounded object-cover"
                   src="https://images.unsplash.com/photo-1662120455989-5a433cec9980?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1914&q=80"
                   alt="Quiz Image"
                 />
@@ -178,7 +178,7 @@ export default function Home() {
 
           {/* Completed Quizzes */}
           <section className="mb-6">
-            <h2 className="text-lg font-semibold mb-4">Completed Quizzes</h2>
+            <h2 className="mb-4 text-lg font-semibold">Completed Quizzes</h2>
             <table className="w-full table-fixed">
               <thead>
                 <tr>
@@ -199,14 +199,14 @@ export default function Home() {
                       </td>
                       <td className="border px-4 py-2">12/02/2023</td>
                     </tr>
-                  )
+                  ),
                 )}
               </tbody>
             </table>
           </section>
 
           {/* Current Class Sessions */}
-          <h2 className="text-lg font-semibold mb-4">Current Class Sessions</h2>
+          <h2 className="mb-4 text-lg font-semibold">Current Class Sessions</h2>
 
           <CurrentClassSessions />
         </div>

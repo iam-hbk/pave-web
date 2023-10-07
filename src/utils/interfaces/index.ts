@@ -2,17 +2,23 @@ export interface QRCodeOrigin {
   lat: number;
   long: number;
 }
+export interface Lecturer {
+  _id: string;
+  name: string;
+}
 export interface CreateClassSession {
-  moduleId: string;
-  coords: QRCodeOrigin;
-  startDateTime: Date;
-  endDateTime: Date;
+  qrCodeOrigin: QRCodeOrigin;
+  _id: string;
+  module: ModuleInfo;
+  classStartTime: Date;
+  classEndTime: Date;
 }
 
 export interface ModuleInfo {
   _id: string;
   moduleName: string;
   moduleCode: string;
+  lecturer:Lecturer
 }
 
 export interface ClassSessionInfo {
