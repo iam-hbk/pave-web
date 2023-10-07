@@ -6,8 +6,8 @@ export default function Navbar() {
     <div className="navbar bg-white flex shadow relative z-10">
       <div className="logo w-full md:w-2/5 flex justify-center items-center">
         <Image
-          width={100}
-          height={100}
+          width={111}
+          height={32}
           src="/assets/svgs/Pave_Logo.svg"
           alt="Pave Logo"
         />
