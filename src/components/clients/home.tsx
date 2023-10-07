@@ -31,7 +31,6 @@ export default function Home() {
     const startDateTime = new Date(startTime);
     const endDateTime = new Date(endTime);
     await getCoordinates();
-    console.log(startTime, endTime);
     if (!coords) return alert("Please enable location services and try again");
 
     try {
@@ -43,8 +42,6 @@ export default function Home() {
         endDateTime,
       };
       const data = await createClassSession(dataToSubmit);
-
-      console.log(data);
       setQRCode_data(JSON.stringify(data.data));
 
       const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
