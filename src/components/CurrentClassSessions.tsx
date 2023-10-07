@@ -48,26 +48,29 @@ function ClassSessionComponent({
   qrCodeData,
 }: ClassSessionComponentProps) {
   const [isQrModalOpen, setIsQrModalOpen] = React.useState(false);
-
+  const handleModalClose = () => {
+    setIsQrModalOpen(false);
+  }
   return (
     <section key={session._id} className="mb-6">
       <QRCodeModal
         id={session._id}
         data={JSON.stringify(qrCodeData)}
         isOpen={isQrModalOpen}
-        onClose={() => {}}
+        onClose={handleModalClose}
       />
       <div className="p-4 bg-gray-200 rounded-lg mb-4 space-x-4 hover:shadow-lg transition-shadow duration-300">
         <div className="flex gap-3 items-center justify-between mb-4">
           <div className="flex-1">
             <h3 className="font-bold">{session.module.moduleName}</h3>
-            <p>Start Time: {formatDateString(session.classEndTime)}</p>
+            <p>Start Time: {formatDateString(session.classStartTime)}</p>
             <p>End Time: {formatDateString(session.classEndTime)}</p>
           </div>
           <button
             className="btn btn-primary"
             onClick={() => {
               setIsQrModalOpen(true);
+              console.log("opening modal...")
             }}
           >
             View QR Code

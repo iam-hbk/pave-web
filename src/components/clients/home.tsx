@@ -3,19 +3,14 @@
 import Image from "next/image";
 import Head from "next/head";
 import { useState } from "react";
-import axios from "axios";
-import { useQRCode } from "next-qrcode";
 import Sidebar from "@/components/Sidebar";
 import StudentList from "@/components/StudentList";
 import { getCurrentLongLat } from "@/utils/helpers";
 import QRCodeModal from "@/components/QRCodeModal";
-import { useQuery } from "react-query";
-import {
-  createClassSession,
-  getClassSessionByLecturerID,
-} from "@/utils/apis/sessions";
+import { createClassSession } from "@/utils/apis/sessions";
 import { QRCodeOrigin, CreateClassSession } from "@/utils/interfaces";
 import CurrentClassSessions from "../CurrentClassSessions";
+import Link from "next/link";
 
 export default function Home() {
   const [startTime, setStartTime] = useState("");
@@ -62,12 +57,10 @@ export default function Home() {
     }
   };
   return (
-    <div className="min-h-screen bg-gray-100 flex transition-all duration-300">
+    <div className="min-h-screen bg-gray-100 flex  transition-all duration-300">
       <Head>
         <title>Dashboard</title>
       </Head>
-      {/* Sidebar */}
-      <Sidebar />
       {/* New session modal */}
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
@@ -145,16 +138,19 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 p-6 flex transition-all duration-300">
+      <main className="flex-1 p-6 flex transition-all lg:flex-row lg:gap-1 gap-5 flex-col duration-300">
         <div className="bg-white p-6 rounded-xl shadow-md w-2/3 mr-4">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-xl font-semibold">Dashboard</h1>
             <div className="flex items-center space-x-4">
               <div className="text-gray-500">Dr Fanie Radebe</div>
-              <button className="btn btn-primary transition-all duration-300 hover:shadow-lg">
+              <Link
+                href={"/dashboard/quiz"}
+                className="btn btn-primary transition-all duration-300 hover:shadow-lg"
+              >
                 New quiz
-              </button>
+              </Link>
             </div>
           </div>
 

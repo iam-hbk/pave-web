@@ -6,7 +6,7 @@ type Props = {};
 
 const queryClient = new QueryClient();
 
-function Home({}: Props) {
+function Home() {
   return (
     <QueryClientProvider client={queryClient}>
       <HomeComponent />;

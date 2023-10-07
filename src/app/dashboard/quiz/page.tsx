@@ -71,7 +71,7 @@ export default function Quiz() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex transition-all duration-300">
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div>
         <h2 className=" p-6 text-xl font-bold mb-5">Create a New Quiz</h2>
         <div className="p-6">
