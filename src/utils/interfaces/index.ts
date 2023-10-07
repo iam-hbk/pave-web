@@ -23,4 +23,6 @@ export interface ClassSessionInfo {
   classEndTime: string;
   isActive: boolean;
   __v: number;
+  createdAt: string;
+  updatedAt: string;
 }
