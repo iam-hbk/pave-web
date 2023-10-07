@@ -11,7 +11,7 @@ export default function Welcome() {
           <button className="btn btn-primary mt-4">Sign up</button>
         </div>
         <div className="flex justify-center items-center hidden md:flex">
-          <Image width={100} height={100} src="/assets/svgs/Education.svg" alt="Welcome" />
+          <Image width={511} height={397} src="/assets/svgs/Education.svg" alt="Welcome" />
         </div>
       </div>
     </div>

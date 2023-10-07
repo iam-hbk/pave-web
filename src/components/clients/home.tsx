@@ -3,23 +3,23 @@
 import Image from "next/image";
 import Head from "next/head";
 import { useState } from "react";
-import axios from "axios";
-import { useQRCode } from "next-qrcode";
 import Sidebar from "@/components/Sidebar";
 import StudentList from "@/components/StudentList";
 import { getCurrentLongLat } from "@/utils/helpers";
-
-interface COORDS {
-  lat: number;
-  long: number;
-}
+import QRCodeModal from "@/components/QRCodeModal";
+import { createClassSession } from "@/utils/apis/sessions";
+import { QRCodeOrigin, CreateClassSession } from "@/utils/interfaces";
+import CurrentClassSessions from "../CurrentClassSessions";
+import Link from "next/link";
 
 export default function Home() {
-  const { SVG } = useQRCode();
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [coords, setCoords] = useState<COORDS>(); // [lat, long
+  const [coords, setCoords] = useState<QRCodeOrigin>(); // [lat, long
+
   const [QRCode_data, setQRCode_data] = useState("");
+  const [isQRModalOpen, setIsQRModalOpen] = useState<boolean>(false);
+
   const [submitting, setSubmitting] = useState(false);
   const getCoordinates = async () => {
     const coordinates = await getCurrentLongLat();
@@ -33,37 +33,23 @@ export default function Home() {
     await getCoordinates();
     console.log(startTime, endTime);
     if (!coords) return alert("Please enable location services and try again");
-    const options = {
-      method: "POST",
-      url: "http://localhost:4001/api/class-session/create",
-      headers: {
-        Accept: "*/*",
-
-        "Content-Type": "application/json",
-      },
-      data: {
-        module: "651835453acb0d7dd3434fe0",
-        qrCodeOrigin: coords || { lat: 40.73061, long: -73.935242 },
-        classStartTime: startDateTime.toISOString(),
-        classEndTime: endDateTime.toISOString(),
-      },
-    };
-
-    console.log("COORDS ==>", coords);
 
     try {
       setSubmitting(true);
-      const response = await axios.request(options);
-      console.log(response.data);
-      const data = response.data.data;
-      setQRCode_data(JSON.stringify(data));
-      console.log("QR CODE DATA : " + QRCode_data);
+      let dataToSubmit: CreateClassSession = {
+        moduleId: "651835453acb0d7dd3434fe0",
+        coords,
+        startDateTime,
+        endDateTime,
+      };
+      const data = await createClassSession(dataToSubmit);
+
+      console.log(data);
+      setQRCode_data(JSON.stringify(data.data));
 
       const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
       modal.close();
-
-      const QR_modal = document.getElementById("QR_Modal") as HTMLDialogElement;
-      QR_modal.showModal();
+      setIsQRModalOpen(true);
     } catch (error) {
       console.error(error);
     } finally {
@@ -71,12 +57,10 @@ export default function Home() {
     }
   };
   return (
-    <div className="min-h-screen bg-gray-100 flex transition-all duration-300">
+    <div className="min-h-screen bg-gray-100 flex  transition-all duration-300">
       <Head>
         <title>Dashboard</title>
       </Head>
-      {/* Sidebar */}
-      <Sidebar />
       {/* New session modal */}
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
@@ -146,54 +130,27 @@ export default function Home() {
         </div>
       </dialog>
       {/* QR code modal */}
-      <dialog id="QR_Modal" className="modal">
-        <div className="flex flex-col justify-center align-center modal-box w-auto">
-          <div>
-            {QRCode_data && QRCode_data.length > 0 && (
-              <SVG
-                text={QRCode_data}
-                options={{
-                  margin: 2,
-                  width: 300,
-                  color: {
-                    // dark: "#010599FF",
-                    // light: "#FFBF60FF",
-                  },
-                }}
-              />
-            )}
-          </div>
-          <div>
-            {/* Close button */}
-
-            <button
-              type="button"
-              className="btn ml-2"
-              p-10
-              onClick={() => {
-                const modal = document.getElementById(
-                  "QR_Modal"
-                ) as HTMLDialogElement;
-                if (modal) modal.close();
-              }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </dialog>
+      <QRCodeModal
+        id="qr_created_session_modal"
+        data={QRCode_data}
+        isOpen={isQRModalOpen}
+        onClose={() => {}}
+      />
 
       {/* Main Content */}
-      <main className="flex-1 p-6 flex transition-all duration-300">
+      <main className="flex-1 p-6 flex transition-all lg:flex-row lg:gap-1 gap-5 flex-col duration-300">
         <div className="bg-white p-6 rounded-xl shadow-md w-2/3 mr-4">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-xl font-semibold">Dashboard</h1>
             <div className="flex items-center space-x-4">
               <div className="text-gray-500">Dr Fanie Radebe</div>
-              <button className="btn btn-primary transition-all duration-300 hover:shadow-lg">
+              <Link
+                href={"/dashboard/quiz"}
+                className="btn btn-primary transition-all duration-300 hover:shadow-lg"
+              >
                 New quiz
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -223,7 +180,7 @@ export default function Home() {
           </section>
 
           {/* Completed Quizzes */}
-          <section>
+          <section className="mb-6">
             <h2 className="text-lg font-semibold mb-4">Completed Quizzes</h2>
             <table className="w-full table-fixed">
               <thead>
@@ -250,6 +207,11 @@ export default function Home() {
               </tbody>
             </table>
           </section>
+
+          {/* Current Class Sessions */}
+          <h2 className="text-lg font-semibold mb-4">Current Class Sessions</h2>
+
+          <CurrentClassSessions />
         </div>
 
         {/* Students List */}
