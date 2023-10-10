@@ -22,7 +22,7 @@ export default function Sidebar() {
       <nav className="space-y-4">
         {[
           { title: "Dashboard", link: "/dashboard/home" },
-          { title: "Quizzes", link: "#" },
+          { title: "Quizzes", link: "/dashboard/quiz" },
           { title: "Students", link: "#" },
           { title: "Results", link: "#" },
           { title: "Help", link: "#" },

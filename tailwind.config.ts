@@ -14,7 +14,38 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
+    keyframes: {
+      gradientLoopForm: {
+        "0%": {
+          background:
+            "linear-gradient(to right, var(--color-primary), var(--color-purple-600))",
+        },
+        "50%": {
+          background:
+            "linear-gradient(to right, var(--color-purple-600), var(--color-primary))",
+        },
+        "100%": {
+          background:
+            "linear-gradient(to right, var(--color-primary), var(--color-purple-600))",
+        },
+      },
+      gradientLoopWizard: {
+        "0%": {
+          background:
+            "linear-gradient(to right, var(--color-green-400), var(--color-red-500))",
+        },
+        "50%": {
+          background:
+            "linear-gradient(to right, var(--color-red-500), var(--color-green-400))",
+        },
+        "100%": {
+          background:
+            "linear-gradient(to right, var(--color-green-400), var(--color-red-500))",
+        },
+      },
+    },
   },
+
   daisyui: {
     themes: [
       {
