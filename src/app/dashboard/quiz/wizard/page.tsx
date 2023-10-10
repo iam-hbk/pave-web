@@ -1,15 +1,19 @@
 "use client";
 
+import DisplayQuiz from "@/components/DisplayQuiz";
+import { generateQuizOpenai } from "@/utils/apis/quiz";
 import { useState, ChangeEvent, useRef } from "react";
+import { AiFillDelete } from "react-icons/ai";
 
 export default function Quiz() {
-  const [fileUploaded, setFileUploaded] = useState<boolean>(false);
   const [analysisProgress, setAnalysisProgress] = useState<number>(0);
   const [documentPreview, setDocumentPreview] = useState<string | null>(null);
   const [stage, setStage] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [generatingQuiz, setGeneratingQuiz] = useState<boolean>(false);
+  const [context, setContext] = useState<string>("");
+  const [numberOfQuestions, setNumberOfQuestions] = useState<number>(3);
 
   const handleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -18,67 +22,65 @@ export default function Quiz() {
     if (file) {
       console.log("Uploaded file:", file.name);
       setFile(file);
-      setFileUploaded(true);
     }
   };
 
   const generateQuiz = () => {
-    if (fileUploaded && file) {
+    if (file) {
       startAnalysis(file);
     }
   };
 
   // Placeholder function to simulate the AI analysis
-  const startAnalysis = (file: File) => {
+  const startAnalysis = async (file: File) => {
     setGeneratingQuiz(true);
-    // Simulate progress
-    let progress = 0;
+    try {
+      // Step 1: Uploading
+      setStage("Uploading ⬆️...");
+      setAnalysisProgress(10);
+      // Assume uploadFile returns a promise that resolves when the file is uploaded
+      // await uploadFile(file); //goes to supabase storage and returns a url
 
-    const progressStages: { [key: number]: string } = {
-      1: "Uploading ⬆️...",
-      20: "Analyzing 💭...",
-      30: "Generating questions 💡...",
-      40: "Generating answers ⚙️...",
-      50: "Putting it all together🧩...",
-      65: "Touching up🧹...",
-      90: "Almost there ✍🏽...",
-      100: "Quiz generated!🚀",
-    };
+      // Step 2: Analyzing
+      setStage("Analyzing 💭...");
+      setAnalysisProgress(30);
+      // Assume some async analysis function
+      // await analyzeFile(file); //goes to supabase pgvector and returns a vector
 
-    const interval = setInterval(() => {
-      progress += 1;
-
-      if (progressStages[progress]) {
-        setStage(progressStages[progress]);
+      // Step 3: Generating Quiz
+      setStage("Generating questions 💡...");
+      setAnalysisProgress(50);
+      const res = await generateQuizOpenai(numberOfQuestions, context); //goes to openai and returns a quiz
+      console.log(res);
+      if (res) {
+        setDocumentPreview(JSON.stringify(res));
       }
 
-      setAnalysisProgress(progress);
-      if (progress === 100) {
-        clearInterval(interval);
-        // Simulate document preview after analysis
-        setDocumentPreview(
-          "This is a preview of the generated questions using the uploaded document...\nThe Question component is yet to be made.",
-        );
-        setGeneratingQuiz(false);
-      }
-    }, 200);
-
-    // TODO: Add your HTTP request logic here
+      // Step 4: Finalizing
+      setStage("Quiz generated!🚀");
+      setAnalysisProgress(100);
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      setGeneratingQuiz(false);
+    }
   };
 
   const tryAgain = () => {
-    //reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    if (
+      window.confirm(
+        "Are you sure you want to try again? your progress will be lost",
+      )
+    ) {
+      setDocumentPreview(null);
+      setFile(null);
+      setContext("");
+      setNumberOfQuestions(3);
     }
-    setFileUploaded(false);
-    setAnalysisProgress(0);
-    setDocumentPreview(null);
-    setStage("");
   };
 
   return (
-    <div className="flex min-h-screen mx-4 justify-center bg-gray-100 p-2 pt-4 transition-all duration-300">
+    <div className="mx-4 flex min-h-screen justify-center bg-gray-100 p-2 pt-4 transition-all duration-300">
       <div className="min-w-xl  flex w-full flex-col rounded-xl bg-white p-8 shadow-lg">
         <h2 className="mb-4 text-2xl text-primary">
           Create a Quiz using the <b>Form Wizard</b>
@@ -87,39 +89,88 @@ export default function Quiz() {
           Upload your course material, and let{" "}
           <b className="text-primary">Pave AI</b> &apos;s advanced algorithms
           analyze the content. Based on the material&apos;s key points and
-          concepts, <b className="text-primary">Pave AI</b>  will automatically
+          concepts, <b className="text-primary">Pave AI</b> will automatically
           generate a comprehensive quiz tailored for your students, ensuring
           they grasp the essential topics effectively.
         </p>
-        <div className="mb-4">
-          <label className="mb-2 block text-sm font-bold text-gray-700">
-            Upload PDF:
-          </label>
+        <div className="mb-4 flex gap-2">
           <input
             ref={fileInputRef}
-            disabled={fileUploaded}
+            disabled={!!file}
             onChange={handleFileUpload}
             type="file"
             accept=".pdf"
-            className="w-full rounded-lg border px-3 py-2 shadow-sm"
+            className="file-input file-input-primary w-full max-w-xs"
           />
+          {!!file && (
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Are you sure you want to remove that file? your progress will be lost",
+                  )
+                ) {
+                  setFile(null);
+                }
+              }}
+              className="btn btn-error btn-outline text-2xl"
+            >
+              <AiFillDelete />
+            </button>
+          )}
         </div>
         {file && !documentPreview && (
-          <button
-            className="btn btn-primary self-end"
-            disabled={!fileUploaded}
-            onClick={generateQuiz}
-          >
-            {generatingQuiz ? (
-              <>
-                <span className="loading loading-dots"></span> Generating
-              </>
-            ) : (
-              "Generate Quiz"
-            )}
-          </button>
+          <div className="flex w-full flex-col gap-3 transition-all duration-300 ">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">
+                  What do you want the quiz to focus on ?
+                </span>
+                <span
+                  className="tooltip tooltip-left flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 font-bold text-white hover:bg-primary-focus"
+                  data-tip="This will help PAVE AI generate questions that focus more on the topics you want your students to learn the most. Please make sure they are outlined in the document."
+                >
+                  <p>?</p>
+                </span>
+              </label>
+              <textarea
+                onChange={(e) => setContext(e.target.value)}
+                className="textarea textarea-bordered h-24"
+                placeholder="Some very important learning outcomes..."
+              ></textarea>
+            </div>
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">
+                  How many questions do you want the quiz to have (1-5)?
+                </span>
+              </label>
+              <input
+                value={numberOfQuestions}
+                onChange={(e) => setNumberOfQuestions(Number(e.target.value))}
+                type="number"
+                max={5}
+                min={1}
+                placeholder="Number of questions"
+                className="input input-bordered w-full max-w-[15rem]"
+              />
+            </div>
+            <button
+              className="btn btn-primary self-end"
+              disabled={!file || generatingQuiz || !(context.length > 10)}
+              onClick={generateQuiz}
+            >
+              {generatingQuiz ? (
+                <>
+                  <span className="loading loading-dots"></span> Generating
+                </>
+              ) : (
+                "Generate Quiz"
+              )}
+            </button>
+          </div>
         )}
-        {fileUploaded && (generatingQuiz || documentPreview) && (
+        {!!file && (generatingQuiz || documentPreview) && (
           <div className="mt-4">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm text-gray-600">{stage}</span>
@@ -134,7 +185,8 @@ export default function Quiz() {
             {documentPreview && (
               <div className="flex flex-col gap-5">
                 <div className="mt-4 flex flex-col rounded-lg border p-4">
-                  <p className="text-sm text-gray-600">{documentPreview}</p>
+                  {/* <p className="text-sm text-gray-600">{documentPreview}</p> */}
+                  <DisplayQuiz questions={JSON.parse(documentPreview)} />
                 </div>
                 <div className="flex gap-2 self-end">
                   <button
