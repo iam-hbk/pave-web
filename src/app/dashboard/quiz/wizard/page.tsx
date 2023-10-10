@@ -78,7 +78,7 @@ export default function Quiz() {
   };
 
   return (
-    <div className="flex min-h-screen justify-center bg-gray-100 p-2 pt-4 transition-all duration-300">
+    <div className="flex min-h-screen mx-4 justify-center bg-gray-100 p-2 pt-4 transition-all duration-300">
       <div className="min-w-xl  flex w-full flex-col rounded-xl bg-white p-8 shadow-lg">
         <h2 className="mb-4 text-2xl text-primary">
           Create a Quiz using the <b>Form Wizard</b>

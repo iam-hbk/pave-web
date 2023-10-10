@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Image from "next/image";
 import Head from "next/head";
@@ -53,10 +53,7 @@ export default function Home() {
     }
   };
   return (
-    <div className="flex min-h-screen bg-gray-100  transition-all duration-300">
-      <Head>
-        <title>Dashboard</title>
-      </Head>
+    <div className="flex min-h-screen transition-all duration-300">
       {/* New session modal */}
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
@@ -134,7 +131,7 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main className="flex flex-1 flex-col gap-5 p-6 transition-all duration-300 lg:flex-row lg:gap-1">
+      <main className="flex flex-1 flex-col gap-5 p-6 pt-3 transition-all duration-300 lg:flex-row lg:gap-1">
         <div className="mr-4 w-2/3 rounded-xl bg-white p-6 shadow-md">
           {/* Header */}
           <div className="mb-6 flex items-center justify-between">

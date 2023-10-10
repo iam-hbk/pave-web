@@ -32,7 +32,7 @@ const Page = (props: Props) => {
     },
   ];
   return (
-    <div className="h-fit p-10 ">
+    <div className="h-fit m-6 p-5 bg-white rounded-xl shadow-md ">
       <h1 className="mb-6 text-2xl font-bold">Create a new quiz</h1>
       <section className="mb-10 grid grid-cols-1 gap-6 text-white md:grid-cols-2">
         <Link
