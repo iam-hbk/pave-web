@@ -85,9 +85,9 @@ export default function Quiz() {
         </h2>
         <p className="mb-6 text-gray-600">
           Upload your course material, and let{" "}
-          <b className="text-primary">Pave</b> AI&apos;s advanced algorithms
+          <b className="text-primary">Pave AI</b> &apos;s advanced algorithms
           analyze the content. Based on the material&apos;s key points and
-          concepts, <b className="text-primary">Pave</b> AI will automatically
+          concepts, <b className="text-primary">Pave AI</b>  will automatically
           generate a comprehensive quiz tailored for your students, ensuring
           they grasp the essential topics effectively.
         </p>
