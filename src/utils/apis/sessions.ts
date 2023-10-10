@@ -4,6 +4,7 @@ import { CreateClassSession } from "../interfaces";
 // Create an axios instance
 const apiClient = axios.create({
   baseURL: "http://localhost:4001/api",
+  // baseURL: "https://pave-server.onrender.com/api",
   headers: {
     Accept: "*/*",
     "Content-Type": "application/json",
@@ -14,7 +15,7 @@ const apiClient = axios.create({
 export async function getClassSessionByLecturerID(lecturerId: string) {
   try {
     const response = await apiClient.get(
-      `/class-session/lecturer/${lecturerId}`
+      `/class-session/lecturer/${lecturerId}`,
     );
     return response.data;
   } catch (error: any) {
@@ -40,7 +41,7 @@ export async function createClassSession({
   coords,
   startDateTime,
   endDateTime,
-}: CreateClassSession) {
+}: any) {
   try {
     const response = await apiClient.post("/class-session/create", {
       module: moduleId,
@@ -48,6 +49,16 @@ export async function createClassSession({
       classStartTime: startDateTime.toISOString(),
       classEndTime: endDateTime.toISOString(),
     });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getAttendanceBySessionId(sessionId: string) {
+  try {
+    const response = await apiClient.get(`/attendance/session/${sessionId}`);
     return response.data;
   } catch (error) {
     console.error(error);

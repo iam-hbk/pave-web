@@ -1,154 +1,120 @@
-"use client"; // This is a client component 👈🏽
-import { Formik, Field, Form, FieldArray, ErrorMessage } from "formik";
-import { useState, ChangeEvent } from "react";
-import Sidebar from "@/components/Sidebar";
-import * as Yup from "yup";
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
-const validationSchema = Yup.object({
-  title: Yup.string().required("Required"),
-  module: Yup.string().required("Required"),
-  isActive: Yup.boolean(),
-  expiresAt: Yup.date().required("Required"),
-  questions: Yup.array()
-    .of(
-      Yup.object({
-        questionText: Yup.string().required("Required"),
-        options: Yup.array()
-          .of(Yup.string().required("Required"))
-          .min(2, "At least two options required"),
-        correctAnswer: Yup.number()
-          .min(0, "Invalid option")
-          .required("Required"),
-      })
-    )
-    .min(1, "At least one question required"),
-});
+type Props = {};
 
-const MAX_QUESTIONS = 5;
-interface QuestionData {
-  questionText: string;
-  options: string[];
-  correctAnswer: number; // 0-based index of the correct option
-}
-const defaultQuestionData: QuestionData = {
-  questionText: "",
-  options: ["", "", "", ""],
-  correctAnswer: 0,
-};
-
-export default function Quiz() {
-  const [numOfQuestions, setNumOfQuestions] = useState<number>(0);
-  const [questions, setQuestions] = useState<QuestionData[]>([]);
-
-  const handleQuestionDataChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    index: number,
-    optionIndex?: number
-  ) => {
-    const updatedQuestions = [...questions];
-    if (optionIndex !== undefined) {
-      updatedQuestions[index].options[optionIndex] = e.target.value;
-    } else if (e.target.name === "questionText") {
-      updatedQuestions[index].questionText = e.target.value;
-    } else {
-      updatedQuestions[index].correctAnswer = Number(e.target.value);
-    }
-    setQuestions(updatedQuestions);
-  };
-
-  const handleNumOfQuestionsChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const count = parseInt(e.target.value, 10);
-    if (count <= MAX_QUESTIONS) {
-      setNumOfQuestions(count);
-      const newQuestions = Array(count).fill(defaultQuestionData);
-      setQuestions(newQuestions);
-    }
-  };
-
-  const handleSubmit = () => {
-    console.log(questions); // Replace this with your submit logic
-  };
-
+const Page = (props: Props) => {
+  const quizzes = [
+    {
+      title: "C# Windows Forms",
+      respondents: 25,
+      isActive: true,
+      expiryDate: "2023-12-31",
+    },
+    {
+      title: "Data structures and algorithms",
+      respondents: 10,
+      isActive: false,
+      expiryDate: "2023-11-15",
+    },
+    {
+      title: "Data structures and algorithms",
+      respondents: 10,
+      isActive: false,
+      expiryDate: "2023-11-15",
+    },
+    {
+      title: "Data structures and algorithms",
+      respondents: 10,
+      isActive: false,
+      expiryDate: "2023-11-15",
+    },
+  ];
   return (
-    <div className="min-h-screen bg-gray-100 flex transition-all duration-300">
-      {/* <Sidebar /> */}
-      <div>
-        <h2 className=" p-6 text-xl font-bold mb-5">Create a New Quiz</h2>
-        <div className="p-6">
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Enter number of questions:
-            </label>
-            <input
-              style={{
-                width: 100,
-              }}
-              type="number"
-              min="1"
-              max="5"
-              value={numOfQuestions}
-              onChange={handleNumOfQuestionsChange}
-              className="w-full px-3 py-2 border rounded-lg shadow-sm"
+    <div className="h-fit m-6 p-5 bg-white rounded-xl shadow-md ">
+      <h1 className="mb-6 text-2xl font-bold">Create a new quiz</h1>
+      <section className="mb-10 grid grid-cols-1 gap-6 text-white md:grid-cols-2">
+        <Link
+          href="./quiz/form"
+          className="bordered card bg-gradient-to-tr from-primary to-purple-600 transition-all duration-1000 hover:from-yellow-100 hover:to-primary hover:text-primary-content hover:shadow-lg"
+        >
+          <figure>
+            <Image
+              src="/assets/svgs/form.svg"
+              width={130}
+              height={130}
+              alt="Form sheet"
             />
+          </figure>
+          <div className="card-body transition-none">
+            <h2 className="card-title">Using a Form sheet</h2>
+            <p>
+              Create a quiz manually by using a form and setting your own
+              questions.
+            </p>
           </div>
-          <div className="flex">
-            {questions.map((q, index) => (
-              <div key={index} className="card m-4 ">
-                <div className="card-body bg-white rounded" >
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    {`Question ${index + 1}:`}
-                  </label>
-                  <input
-                    type="text"
-                    name="questionText"
-                    // value={q.questionText}
-                    // onChange={(e) => handleQuestionDataChange(e, index)}
-                    placeholder="Enter question text"
-                    className="w-full px-3 py-2 border rounded-lg shadow-sm mb-2"
-                  />
-
-                  {["A", "B", "C", "D"].map((optionLetter, optionIndex) => (
-                    <div key={optionIndex} className="mb-2">
-                      <label className="block text-gray-700 text-sm font-bold mb-1">
-                        {`Option ${optionLetter}:`}
-                      </label>
-                      <input
-                        type="text"
-                        // value={q.options[optionIndex]}
-                        // onChange={(e) =>
-                        //   handleQuestionDataChange(e, index, optionIndex)
-                        // }
-                        placeholder={`Option ${optionLetter}`}
-                        className="w-full px-3 py-2 border rounded-lg shadow-sm"
-                      />
-                    </div>
-                  ))}
-
-                  <div className="mb-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Correct Answer:
-                    </label>
-                    <select
-                      name="correctAnswer"
-                    //   value={q.correctAnswer}
-                    //   onChange={(e) => handleQuestionDataChange(e, index)}
-                      className="w-full px-3 py-2 border rounded-lg shadow-sm"
-                    >
-                      <option value="0">Option A</option>
-                      <option value="1">Option B</option>
-                      <option value="2">Option C</option>
-                      <option value="3">Option D</option>
-                    </select>
-                  </div>
-                </div>
+        </Link>
+        <Link
+          className="bordered card bg-gradient-to-tr from-info to-secondary transition-all duration-300 hover:from-purple-400  hover:to-blue-600 hover:text-info-content hover:shadow-lg"
+          href="./quiz/wizard"
+        >
+          <figure>
+            <Image
+              src="/assets/svgs/wizard.svg"
+              width={130}
+              height={120}
+              alt="Form wizard"
+            />
+          </figure>
+          <div className="card-body transition-none">
+            <h2 className="card-title">Using the Form wizard</h2>
+            <p>
+              Upload your course material and let Pave AI generate a quiz for
+              you.
+            </p>
+          </div>
+        </Link>
+      </section>
+      <h1 className="mb-6 text-2xl font-bold">Your Quizzes</h1>
+      <section className="mb-10 grid grid-cols-1 gap-6">
+        {quizzes.map((quiz, index) => (
+          <div
+            key={index}
+            className="inset-0 transform  rounded-xl bg-gray-50 p-6 shadow-md transition-all duration-300 hover:bg-info hover:bg-opacity-10"
+          >
+            <h3 className="mb-4 text-2xl font-bold capitalize text-gray-800">
+              {quiz.title}
+            </h3>
+            <div className="mb-4 flex items-center space-x-2">
+              <span className="rounded-sm bg-gray-200 p-3 text-sm text-gray-600">
+                {quiz.respondents} Students enrolled
+              </span>
+              <span
+                className={`rounded-sm p-3 text-sm ${
+                  quiz.isActive
+                    ? "bg-green-200 text-green-700"
+                    : "bg-red-200 text-red-700"
+                }`}
+              >
+                {quiz.isActive ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <div className="flex w-full items-center justify-between ">
+              <p className="border-l-4 border-blue-500 py-2 pl-4 text-gray-600">
+                Expires on: {quiz.expiryDate}
+              </p>
+              <div className="flex gap-5 self-end">
+                <button className="btn btn-primary">View</button>
+                <button className="btn btn-secondary btn-outline">Edit</button>
+                <button className="btn btn-error">Delete</button>
               </div>
-            ))}
+            </div>
           </div>
-          <button onClick={handleSubmit} className="btn btn-primary">
-            Submit
-          </button>
-        </div>
-      </div>
+        ))}
+      </section>
     </div>
   );
-}
+};
+
+export default Page;

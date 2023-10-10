@@ -1,5 +1,10 @@
 import { getClassSessionByLecturerID } from "@/utils/apis/sessions";
 import React from "react";
+import {
+  BaseChangeEvent,
+  isInsertChangeEvent,
+  isUpdateChangeEvent,
+} from "@/utils/interfaces/socket";
 import { useQuery } from "react-query";
 import QRCodeModal from "./QRCodeModal";
 import { ClassSessionInfo, CreateClassSession } from "@/utils/interfaces";
@@ -15,6 +20,8 @@ const CurrentClassSessions = () => {
   } = useQuery(["sessions-results"], () =>
     getClassSessionByLecturerID("651831d33acb0d7dd3434fde"),
   );
+  const [newSessions, setNewSessions] = React.useState<string[]>([]);
+  const [updatedSessions, setUpdatedSessions] = React.useState<string[]>([]);
 
   const newSessionData = useSocket("newClassSession", () => {
     refetch();
@@ -22,7 +29,12 @@ const CurrentClassSessions = () => {
 
   React.useEffect(() => {
     if (newSessionData) {
-      console.log("new session data", newSessionData);
+      console.log("new data", newSessionData);
+      if (isInsertChangeEvent(newSessionData)) {
+        setNewSessions((prev) => [...prev, newSessionData.id]);
+      } else if (isUpdateChangeEvent(newSessionData)) {
+        setUpdatedSessions((prev) => [...prev, newSessionData.id]);
+      }
     }
   }, [newSessionData]);
   if (isLoading)
@@ -45,22 +57,32 @@ const CurrentClassSessions = () => {
     );
   return (
     <div>
-      {result.sessions.map((session: ClassSessionInfo) => {
-        let sessionData: CreateClassSession = {
-          coords: session.qrCodeOrigin,
-          endDateTime: new Date(session.classEndTime),
-          moduleId: session.module._id,
-          startDateTime: new Date(session.classStartTime),
-        };
-        // return <div key={session._id}>{index}</div>;
-        return (
-          <ClassSessionComponent
-            key={session._id}
-            session={session}
-            qrCodeData={sessionData}
-          />
-        );
-      })}
+      {/* Sort the sessions by date of creation from the newest to the oldest */}
+      {result.sessions
+        .sort((a: ClassSessionInfo, b: ClassSessionInfo) => {
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        })
+        .map((session: ClassSessionInfo) => {
+          let sessionData: CreateClassSession = {
+            _id: session._id,
+            qrCodeOrigin: session.qrCodeOrigin,
+            classEndTime: new Date(session.classEndTime),
+            module: session.module,
+            classStartTime: new Date(session.classStartTime),
+          };
+
+          return (
+            <ClassSessionComponent
+              key={session._id}
+              session={session}
+              qrCodeData={sessionData}
+              isNew={newSessions.includes(session._id)}
+              wasUpdated={updatedSessions.includes(session._id)}
+            />
+          );
+        })}
     </div>
   );
 };
@@ -70,22 +92,25 @@ export default CurrentClassSessions;
 interface ClassSessionComponentProps {
   qrCodeData: CreateClassSession;
   session: ClassSessionInfo;
+  isNew: boolean;
+  wasUpdated: boolean;
 }
 function ClassSessionComponent({
   session,
   qrCodeData,
+  isNew,
+  wasUpdated,
 }: ClassSessionComponentProps) {
   const [isQrModalOpen, setIsQrModalOpen] = React.useState(false);
   const handleModalClose = () => {
     setIsQrModalOpen(false);
   };
 
-  // Assuming session.creationTime is a Date object or an ISO string
-  const creationTime = new Date(session.updatedAt);
-  const currentTime = new Date();
-  const timeDifferenceMinutes =
-    (currentTime.getTime() - creationTime.getTime()) / (1000 * 60);
-
+  // flag to check if the session is new using the createdAt field on the session
+  // using a time difference of 5 minutes
+  const isNewTime =
+    new Date().getTime() - new Date(session.createdAt).getTime() <
+    5 * 60 * 1000;
   return (
     <section key={session._id} className="relative mb-6">
       {" "}
@@ -96,10 +121,16 @@ function ClassSessionComponent({
         isOpen={isQrModalOpen}
         onClose={handleModalClose}
       />
-      {/* Add a "New" badge if the session was created less than 10 min ago */}
-      {timeDifferenceMinutes < 10 && (
+      {/* Add a "New" badge if the session is new */}
+      {(isNew || isNewTime) && (
         <span className="absolute right-[-5px] top-[-5px] rounded-md bg-success px-2 py-1 text-xs font-bold text-white">
           New
+        </span>
+      )}
+      {/* Add an "Updated" badge if the session was updated */}
+      {wasUpdated && (
+        <span className="absolute right-[-5px] top-[-15px] rounded-md bg-info px-2 py-1 text-xs font-bold text-white">
+          Updated
         </span>
       )}
       <div className="mb-4 space-x-4 rounded-lg bg-gray-200 p-4 transition-shadow duration-300 hover:shadow-lg">
