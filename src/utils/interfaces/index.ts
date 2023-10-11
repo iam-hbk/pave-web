@@ -18,7 +18,7 @@ export interface ModuleInfo {
   _id: string;
   moduleName: string;
   moduleCode: string;
-  lecturer:Lecturer
+  lecturer: Lecturer;
 }
 
 export interface ClassSessionInfo {
@@ -28,6 +28,21 @@ export interface ClassSessionInfo {
   classStartTime: string;
   classEndTime: string;
   isActive: boolean;
+  __v: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type GeneratedQuestion = {
+  questionText: string;
+  options: string[];
+  correctAnswer: number;
+};
+export interface Quiz {
+  _id: string;
+  module: string;
+  questions: GeneratedQuestion[];
+  title: string;
   __v: number;
   createdAt: string;
   updatedAt: string;

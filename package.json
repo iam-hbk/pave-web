@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
     "axios": "^1.5.1",
     "daisyui": "^3.8.3",
     "formik": "^2.4.5",
     "framer-motion": "^10.16.4",
+    "langchain": "^0.0.164",
     "next": "latest",
     "next-qrcode": "^2.5.1",
     "react": "latest",
