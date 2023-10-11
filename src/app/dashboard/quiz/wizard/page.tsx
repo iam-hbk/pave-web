@@ -1,7 +1,6 @@
 "use client";
 
 import DisplayQuiz from "@/components/DisplayQuiz";
-import { loadDocument } from "@/utils/apis/loadDocument";
 import { generateQuizOpenai } from "@/utils/apis/quiz";
 import { useState, ChangeEvent, useRef } from "react";
 import { AiFillDelete } from "react-icons/ai";
@@ -97,7 +96,7 @@ export default function Quiz() {
         <div className="mb-4 flex gap-2">
           <button
             className="btn btn-info btn-outline"
-            onClick={() => file && loadDocument(file)}
+            // onClick={() => file && loadDocument(file)}
           >
             Regenerate &#10227;
           </button>
