@@ -54,6 +54,7 @@ function validateOutput(output: any): output is GeneratedQuestion[] {
 export async function generateQuizOpenai(
   numberOfquestions: number,
   topic: string,
+  file: File,
 ): Promise<GeneratedQuestion[] | string> {
   const PROMPT = `
       Generate multiple-choice questions each question along with four answer options. 
