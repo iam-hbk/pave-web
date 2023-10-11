@@ -1,6 +1,7 @@
 "use client";
 
 import DisplayQuiz from "@/components/DisplayQuiz";
+import { loadDocument } from "@/utils/apis/loadDocument";
 import { generateQuizOpenai } from "@/utils/apis/quiz";
 import { useState, ChangeEvent, useRef } from "react";
 import { AiFillDelete } from "react-icons/ai";
@@ -50,7 +51,7 @@ export default function Quiz() {
       // Step 3: Generating Quiz
       setStage("Generating questions 💡...");
       setAnalysisProgress(50);
-      const res = await generateQuizOpenai(numberOfQuestions, context); //goes to openai and returns a quiz
+      const res = await generateQuizOpenai(numberOfQuestions, context, file); //goes to openai and returns a quiz
       console.log(res);
       if (res) {
         setDocumentPreview(JSON.stringify(res));
@@ -94,6 +95,12 @@ export default function Quiz() {
           they grasp the essential topics effectively.
         </p>
         <div className="mb-4 flex gap-2">
+          <button
+            className="btn btn-info btn-outline"
+            onClick={() => file && loadDocument(file)}
+          >
+            Regenerate &#10227;
+          </button>
           <input
             ref={fileInputRef}
             disabled={!!file}
@@ -189,6 +196,12 @@ export default function Quiz() {
                   <DisplayQuiz questions={JSON.parse(documentPreview)} />
                 </div>
                 <div className="flex gap-2 self-end">
+                  <button
+                    className="btn btn-info btn-outline"
+                    onClick={() => {}}
+                  >
+                    Regenerate &#10227;
+                  </button>
                   <button
                     className="btn btn-error btn-outline"
                     onClick={tryAgain}
