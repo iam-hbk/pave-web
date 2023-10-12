@@ -1,6 +1,5 @@
 import { io, Socket } from "socket.io-client";
-
-const serverUrl = "http://localhost:4001";
+import { serverUrl } from ".";
 
 let socket: Socket | null = null;
 

@@ -1,13 +1,14 @@
 "use client";
 
 import DisplayQuiz from "@/components/DisplayQuiz";
-import { generateQuizOpenai } from "@/utils/apis/quiz";
+import { sendFileToServer } from "@/utils/apis/uploadDocument";
+import { GeneratedQuestion } from "@/utils/interfaces";
 import { useState, ChangeEvent, useRef } from "react";
 import { AiFillDelete } from "react-icons/ai";
 
 export default function Quiz() {
   const [analysisProgress, setAnalysisProgress] = useState<number>(0);
-  const [documentPreview, setDocumentPreview] = useState<string | null>(null);
+  const [properQuestions, setProperQuestions] = useState<GeneratedQuestion[]>();
   const [stage, setStage] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -46,14 +47,21 @@ export default function Quiz() {
       setAnalysisProgress(30);
       // Assume some async analysis function
       // await analyzeFile(file); //goes to supabase pgvector and returns a vector
+      setAnalysisProgress(50);
 
       // Step 3: Generating Quiz
       setStage("Generating questions 💡...");
-      setAnalysisProgress(50);
-      const res = await generateQuizOpenai(numberOfQuestions, context, file); //goes to openai and returns a quiz
-      console.log(res);
-      if (res) {
-        setDocumentPreview(JSON.stringify(res));
+
+      setAnalysisProgress(90);
+      const res_ = await await sendFileToServer(
+        "https://aevwyaazfzhahdlhanub.supabase.co/storage/v1/object/public/course-material/chapter%205.pdf",
+        context,
+        numberOfQuestions,
+      );
+      console.log("RESSSS", res_);
+      if (res_) {
+        setProperQuestions(res_);
+        // setProperQuestions(JSON.stringify(res_));
       }
 
       // Step 4: Finalizing
@@ -72,7 +80,7 @@ export default function Quiz() {
         "Are you sure you want to try again? your progress will be lost",
       )
     ) {
-      setDocumentPreview(null);
+      setProperQuestions(undefined);
       setFile(null);
       setContext("");
       setNumberOfQuestions(3);
@@ -94,12 +102,14 @@ export default function Quiz() {
           they grasp the essential topics effectively.
         </p>
         <div className="mb-4 flex gap-2">
-          <button
+          {/* <button
+            disabled={!file || pushingFile}
             className="btn btn-info btn-outline"
-            // onClick={() => file && loadDocument(file)}
+            onClick={handleSendFile}
           >
+            {pushingFile ? <span className="loading loading-dots"></span> : ""}
             Regenerate &#10227;
-          </button>
+          </button> */}
           <input
             ref={fileInputRef}
             disabled={!!file}
@@ -125,7 +135,7 @@ export default function Quiz() {
             </button>
           )}
         </div>
-        {file && !documentPreview && (
+        {file && !properQuestions && (
           <div className="flex w-full flex-col gap-3 transition-all duration-300 ">
             <div className="form-control">
               <label className="label">
@@ -176,7 +186,7 @@ export default function Quiz() {
             </button>
           </div>
         )}
-        {!!file && (generatingQuiz || documentPreview) && (
+        {!!file && (generatingQuiz || !!properQuestions) && (
           <div className="mt-4">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm text-gray-600">{stage}</span>
@@ -188,16 +198,16 @@ export default function Quiz() {
                 style={{ width: `${analysisProgress}%` }}
               ></div>
             </div>
-            {documentPreview && (
+            {!!properQuestions && (
               <div className="flex flex-col gap-5">
                 <div className="mt-4 flex flex-col rounded-lg border p-4">
-                  {/* <p className="text-sm text-gray-600">{documentPreview}</p> */}
-                  <DisplayQuiz questions={JSON.parse(documentPreview)} />
+                  {/* <p className="text-sm text-gray-600">{properQuestions}</p> */}
+                  <DisplayQuiz questions={properQuestions} />
                 </div>
                 <div className="flex gap-2 self-end">
                   <button
                     className="btn btn-info btn-outline"
-                    onClick={() => {}}
+                    onClick={generateQuiz}
                   >
                     Regenerate &#10227;
                   </button>
