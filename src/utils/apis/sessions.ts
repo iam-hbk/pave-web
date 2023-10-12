@@ -3,7 +3,7 @@ import { CreateClassSession } from "../interfaces";
 
 // Create an axios instance
 const apiClient = axios.create({
-  baseURL: "http://localhost:4001/api",
+  baseURL: "https://pave-server.onrender.com/api",
   // baseURL: "https://pave-server.onrender.com/api",
   headers: {
     Accept: "*/*",
