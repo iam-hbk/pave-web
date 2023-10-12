@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const serverUrl = "http://localhost:4001";
+const serverUrl = "https://pave-server.onrender.com";
 
 let socket: Socket | null = null;
 
