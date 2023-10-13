@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const serverUrl = "http://localhost:4001";
+export const serverUrl = "https://pave-server.onrender.com";
 
 // Create an axios instance
 export const apiClient = axios.create({

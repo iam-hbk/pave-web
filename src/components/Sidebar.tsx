@@ -1,8 +1,13 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
+
+
+
+
   return (
     <aside className=" m-2 mt-6 min-h-[92vh] w-full rounded-lg bg-white p-6 shadow-xl">
       {/* Logo */}
