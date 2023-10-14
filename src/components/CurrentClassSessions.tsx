@@ -10,6 +10,7 @@ import QRCodeModal from "./QRCodeModal";
 import { ClassSessionInfo, CreateClassSession } from "@/utils/interfaces";
 import useSocket from "@/hooks/useSocket";
 import { BiErrorCircle } from "react-icons/bi";
+import { formatDateString } from "@/utils/helpers";
 
 const CurrentClassSessions = () => {
   const {
@@ -156,19 +157,3 @@ function ClassSessionComponent({
   );
 }
 
-function formatDateString(dateString: string): string {
-  const date = new Date(dateString); // Convert string to Date object
-
-  const optionsDay: Intl.DateTimeFormatOptions = { weekday: "long" };
-  const optionsTime: Intl.DateTimeFormatOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-
-  const day = new Intl.DateTimeFormat("en-US", optionsDay).format(date);
-  const time = date.toLocaleTimeString("en-US", optionsTime);
-
-  const formattedDate = `${day} at ${time}`;
-
-  return formattedDate;
-}

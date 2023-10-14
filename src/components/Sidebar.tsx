@@ -2,11 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NewSessionModal } from "./NewSessionModal";
+import { useState } from "react";
 
 export default function Sidebar() {
-
-
-
+  const currentPath = usePathname().split("/")[2];
+  const [openNewSession, setIsOpenNewSession] = useState(false);
 
   return (
     <aside className=" m-2 mt-6 min-h-[92vh] w-full rounded-lg bg-white p-6 shadow-xl">
@@ -20,39 +21,38 @@ export default function Sidebar() {
           className="mb-4 h-auto w-32"
         />
       </div>
-      {/* <div className="flex items-center mb-6 space-x-2">
-        <button className="btn text-primary">☰</button>
-        <button className="btn text-primary">❌</button>
-      </div> */}
       <nav className="space-y-4">
         {[
-          { title: "Dashboard", link: "/dashboard/home" },
-          { title: "Quizzes", link: "/dashboard/quiz" },
-          { title: "Students", link: "#" },
-          { title: "Results", link: "#" },
-          { title: "Help", link: "#" },
+          { id: "home", title: "Home", link: "/dashboard/home" },
+          { id: "quiz", title: "Quizzes", link: "/dashboard/quiz" },
+          { id: "students", title: "Students", link: "#" },
+          { id: "results", title: "Results", link: "#" },
+          { id: "help", title: "Help", link: "#" },
         ].map((item) => (
           <Link
             key={item.title}
             href={item.link}
-            className="block w-full rounded p-2 transition-all duration-300 hover:bg-gray-100"
+            className={`block w-full ${
+              currentPath === item.id
+                ? "bg-primary bg-opacity-80 hover:bg-opacity-100"
+                : "hover:bg-gray-100"
+            } rounded p-2 transition-all duration-300 `}
           >
             {item.title}
           </Link>
         ))}
         <button
-          onClick={() => {
-            const modal = document.getElementById(
-              "my_modal_1",
-            ) as HTMLDialogElement;
-            if (modal) {
-              modal.showModal();
-            }
-          }}
+          onClick={() => setIsOpenNewSession(true)}
           className="block w-full rounded p-2 text-left transition-all duration-300 hover:bg-gray-100"
         >
           New Session
         </button>
+        {openNewSession && (
+          <NewSessionModal
+            isOpen={openNewSession}
+            onClose={() => setIsOpenNewSession(false)}
+          />
+        )}
       </nav>
     </aside>
   );

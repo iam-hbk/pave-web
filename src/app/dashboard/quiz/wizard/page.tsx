@@ -1,14 +1,16 @@
 "use client";
 
 import DisplayQuiz from "@/components/DisplayQuiz";
+import PublishQuizModal from "@/components/PublishQuizModal";
 import { uploadFileToSupabse, supabase } from "@/utils/apis/supabase";
 import {
   generateQuizQuestion,
   GenerateQuizQuestionProps,
-} from "@/utils/apis/uploadDocument";
+} from "@/utils/apis/quiz";
 import { GeneratedQuestion } from "@/utils/interfaces";
 import { useState, ChangeEvent, useRef } from "react";
 import { useMutation } from "react-query";
+import { toast } from "sonner";
 
 export default function Quiz() {
   const [file, setFile] = useState<File | null>(null);
@@ -130,59 +132,60 @@ const QuizGenerator: React.FC<QuizGeneratorProps> = ({
     useState<boolean>(false);
 
   const [fileUrl, setFileUrl] = useState<string>();
+  const [publishQuiz, setPublishQuiz] = useState<boolean>(false);
 
+  const mutationUploadFile = useMutation(uploadFileToSupabse, {
+    onMutate: () => {
+      setStage("Uploading File 📤");
+      setAnalysisProgress(15);
+    },
+    onSuccess: (fileUrl) => {
+      setFileUrl(fileUrl);
+      setStage("Generating Questions ⚙️");
+      setAnalysisProgress(65);
+      mutationGenerateQuizQuestion.mutate({
+        filePath: fileUrl,
+        topic,
+        numberOfQuestions,
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading file:", error);
+      setStage("Error uploading file 😥");
+      setErrorAnalysisProgress(true);
+    },
+  });
+
+  const mutationGenerateQuizQuestion = useMutation(generateQuizQuestion, {
+    onSuccess: (questions) => {
+      setGeneratedQuestions(questions);
+      setStage("");
+
+      toast.success("Questions Generated 🎉");
+      setAnalysisProgress(100);
+    },
+    onError: (error) => {
+      console.error("Error generating questions:", error);
+      setStage("Error generating questions 😥");
+      setErrorAnalysisProgress(true);
+    },
+  });
   const generateQuiz = async () => {
     setErrorAnalysisProgress(false);
-    setStage("Uploading File 📤");
-    setAnalysisProgress(15);
-
-    uploadFileToSupabse(file)
-      .then((fileUrl) => {
-        setFileUrl(fileUrl);
-        setStage("Generating Questions 🤔");
-        setAnalysisProgress(65);
-        console.log("fileUrl:::", fileUrl);
-        generateQuizQuestion({
-          filePath: fileUrl,
-          topic,
-          numberOfQuestions,
-        })
-          .then((questions) => {
-            setGeneratedQuestions(questions);
-            setStage("Questions Generated 🎉");
-            setAnalysisProgress(100);
-          })
-          .catch((error) => {
-            console.error("Error generating questions:", error);
-            setStage("Error generating questions 😥");
-            setErrorAnalysisProgress(true);
-          });
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-        setStage("Error uploading file 😥");
-        setErrorAnalysisProgress(true);
-      });
+    mutationUploadFile.mutate(file);
   };
 
   const handleRegenerate = () => {
     if (fileUrl && topic && numberOfQuestions) {
       setGeneratedQuestions(null);
-      setStage("Generating Questions 🤔");
+      setStage("Generating Questions ⚙️");
       setAnalysisProgress(65);
-      generateQuizQuestion({
+
+      mutationGenerateQuizQuestion.mutate({
         filePath: fileUrl,
         topic,
         numberOfQuestions,
-      })
-        .then((questions) => {
-          setGeneratedQuestions(questions);
-          setStage("Questions Generated 🎉");
-          setAnalysisProgress(100);
-        })
-        .catch((error) => {
-          console.error("Error generating questions:", error);
-        });
+      });
     } else {
       console.log("No file url found");
     }
@@ -199,7 +202,14 @@ const QuizGenerator: React.FC<QuizGeneratorProps> = ({
           }
           onClick={generateQuiz}
         >
-          Generate Quiz
+          {analysisProgress > 0 && analysisProgress < 100 ? (
+            <>
+              <span className="loading loading-dots loading-xs"></span>
+              <span>Generating</span>
+            </>
+          ) : (
+            "Generate Quiz"
+          )}
         </button>
       )}
       {errorAnalysisProgress && (
@@ -236,7 +246,7 @@ const QuizGenerator: React.FC<QuizGeneratorProps> = ({
             <div className="mt-4 flex flex-col rounded-lg border p-4">
               <DisplayQuiz questions={generatedQuestions} />
             </div>
-            <div className="flex gap-2 self-end border">
+            <div className="flex gap-2 self-end">
               <button
                 className="btn btn-error btn-outline"
                 onClick={() => {
@@ -253,7 +263,18 @@ const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                 Regenerate &#10227;
               </button>
 
-              <button className="btn btn-primary">Publish Quiz &rarr;</button>
+              <button
+                onClick={() => setPublishQuiz(true)}
+                className="btn btn-primary"
+              >
+                Publish Quiz &rarr;
+              </button>
+
+              <PublishQuizModal
+                generatedQuestions={generatedQuestions}
+                isOpen={publishQuiz}
+                onClose={() => setPublishQuiz(false)}
+              />
             </div>
           </div>
         )}
