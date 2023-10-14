@@ -7,6 +7,8 @@ import { PiStudentThin } from "react-icons/pi";
 import { useQuery } from "react-query";
 import { getQuizByModuleId } from "@/utils/apis/quiz";
 import { formatDateString } from "@/utils/helpers";
+import Quiz from "@/app/dashboard/quiz/form/page";
+import QuizQRCodeModal from "./QuizQRCodeModal";
 const isRecent = (createdAt: Date) => {
   const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
   return new Date(createdAt) >= fiveMinutesAgo;
@@ -14,6 +16,9 @@ const isRecent = (createdAt: Date) => {
 type Props = {};
 
 export const CurrentQuizzes: React.FC = () => {
+  const [isQrModalOpen, setIsQrModalOpen] = React.useState(false);
+  const [currentQuizId, setCurrentQuizId] = React.useState("");
+
   const {
     data: quizzes,
     isLoading,
@@ -34,6 +39,15 @@ export const CurrentQuizzes: React.FC = () => {
 
   return (
     <section className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <QuizQRCodeModal
+        id="QuizQR"
+        data={currentQuizId}
+        isOpen={isQrModalOpen}
+        onClose={() => {
+          setIsQrModalOpen(false);
+        }}
+      />
+
       {quizzes.map((quiz, index) => (
         <div
           key={index}
@@ -47,7 +61,7 @@ export const CurrentQuizzes: React.FC = () => {
             >
               IFS3A
             </div>
-            <div className="dropdown dropdown-left dropdown-bottom hover:text-primary-focus ">
+            <div className="dropdown-left dropdown-bottom dropdown hover:text-primary-focus ">
               <label
                 tabIndex={0}
                 className="btn btn-xs h-9 w-9 rounded-full bg-none text-lg"
@@ -98,6 +112,17 @@ export const CurrentQuizzes: React.FC = () => {
               Expires on <b>{formatDateString(quiz.expiresAt)}</b>
             </span>
           </div>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              console.log("opening modal...");
+
+              setCurrentQuizId(quiz._id);
+              setIsQrModalOpen(true);
+            }}
+          >
+            View QR Code
+          </button>
         </div>
       ))}
     </section>

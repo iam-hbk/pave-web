@@ -6,8 +6,6 @@ import { CurrentQuizzes } from "@/components/CurrentQuizzes";
 type Props = {};
 
 const Page = (props: Props) => {
-  
-
   return (
     <div className="m-6 h-fit rounded-xl bg-white p-5 shadow-md ">
       <h1 className="mb-6 text-2xl font-bold">Create a new quiz</h1>
@@ -54,6 +52,7 @@ const Page = (props: Props) => {
         </Link>
       </section>
       <h1 className="mb-6 text-2xl font-bold">Your Quizzes</h1>
+
       <CurrentQuizzes />
     </div>
   );

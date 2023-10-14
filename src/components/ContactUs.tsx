@@ -30,10 +30,13 @@ export default function ContactUs() {
           />
           <br />
           <textarea
-            className="textarea textarea-primary"
+          
+            className="textarea textarea-primary w-[500px]"
             placeholder="Message.."
           ></textarea>
+        <button className="btn btn-primary mt-5 w-[120px]" >Submit</button>
         </div>
+
       </div>
 
       <div className="divider"></div>
