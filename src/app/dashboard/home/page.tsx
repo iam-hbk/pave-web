@@ -1,135 +1,13 @@
-"use client";
+'use client'
 
 import Image from "next/image";
-import Head from "next/head";
-import { useState } from "react";
 import StudentList from "@/components/StudentList";
-import { getCurrentLongLat } from "@/utils/helpers";
-import QRCodeModal from "@/components/QRCodeModal";
-import { createClassSession } from "@/utils/apis/sessions";
-import { QRCodeOrigin } from "@/utils/interfaces";
 import CurrentClassSessions from "@/components/CurrentClassSessions";
 import Link from "next/link";
 
 export default function Home() {
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [coords, setCoords] = useState<QRCodeOrigin>(); // [lat, long
-
-  const [QRCode_data, setQRCode_data] = useState("");
-  const [isQRModalOpen, setIsQRModalOpen] = useState<boolean>(false);
-
-  const [submitting, setSubmitting] = useState(false);
-  const getCoordinates = async () => {
-    const coordinates = await getCurrentLongLat();
-    if (coordinates) {
-      setCoords(coordinates);
-    }
-  };
-  const handleSubmit = async () => {
-    const startDateTime = new Date(startTime);
-    const endDateTime = new Date(endTime);
-    await getCoordinates();
-    if (!coords) return alert("Please enable location services and try again");
-
-    try {
-      setSubmitting(true);
-      let dataToSubmit: any = {
-        moduleId: "651835453acb0d7dd3434fe0",
-        coords,
-        startDateTime,
-        endDateTime,
-      };
-      const data = await createClassSession(dataToSubmit);
-      setQRCode_data(JSON.stringify(data.data));
-
-      const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-      modal.close();
-      setIsQRModalOpen(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
   return (
     <div className="flex min-h-screen transition-all duration-300">
-      {/* New session modal */}
-      <dialog id="my_modal_1" className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">New Session</h3>
-          <p className="py-4">Please enter the details</p>
-
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="start-time"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Class Start Time
-              </label>
-              <input
-                type="datetime-local"
-                id="start-time"
-                name="start-time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="mt-1 w-full rounded-md border p-2"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="end-time"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Class End Time
-              </label>
-
-              <input
-                type="datetime-local"
-                id="end-time"
-                name="end-time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="mt-1 w-full rounded-md border p-2"
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 flex items-center">
-            <button
-              type="submit"
-              className={`btn btn-primary `}
-              onClick={handleSubmit}
-              disabled={submitting}
-            >
-              {submitting && <span className="loading loading-spinner"></span>}
-              Submit
-            </button>
-            <button
-              type="button"
-              className="btn ml-2"
-              onClick={() => {
-                const modal = document.getElementById(
-                  "my_modal_1",
-                ) as HTMLDialogElement;
-                if (modal) modal.close();
-              }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </dialog>
-      {/* QR code modal */}
-      <QRCodeModal
-        id="qr_created_session_modal"
-        data={QRCode_data}
-        isOpen={isQRModalOpen}
-        onClose={() => {}}
-      />
-
       {/* Main Content */}
       <main className="flex flex-1 flex-col gap-5 p-6 pt-3 transition-all duration-300 lg:flex-row lg:gap-1">
         <div className="mr-4 w-2/3 rounded-xl bg-white p-6 shadow-md">

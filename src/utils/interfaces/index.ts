@@ -38,12 +38,13 @@ export type GeneratedQuestion = {
   options: string[];
   correctAnswer: number;
 };
-export interface Quiz {
-  _id: string;
-  module: string;
+export interface IQuiz {
+  _id?: string; // An optional _id field, as it's typically provided by MongoDB once a document is saved
+  module: string; // ObjectId represented as a string
   questions: GeneratedQuestion[];
   title: string;
-  __v: number;
-  createdAt: string;
-  updatedAt: string;
+  isActive: boolean;
+  expiresAt: Date;
+  createdAt?: Date; // Marking some of these as optional since they may be set by the backend by default
+  updatedAt?: Date;
 }

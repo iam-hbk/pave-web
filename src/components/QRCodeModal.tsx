@@ -1,4 +1,4 @@
-// components/QRCodeModal.tsx
+
 import { FC, useEffect } from "react";
 import { useQRCode } from "next-qrcode";
 import Image from "next/image";
@@ -20,7 +20,7 @@ const QRCodeModal: FC<QRCodeModalProps> = ({ id, data, isOpen, onClose }) => {
     if (isOpen && modal) {
       modal.showModal();
     }
-    console.log("modal-data", data ?? JSON.stringify(JSON.parse(data), null, 2));
+    // console.log("modal-data", data ?? JSON.stringify(JSON.parse(data), null, 2));
   }, [isOpen, id, data]);
 
   return (

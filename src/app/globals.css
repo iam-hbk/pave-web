@@ -1,38 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@keyframes gradientLoopForm {
-  0%,
-  100% {
-    background: linear-gradient(
-      to right,
-      var(--color-primary),
-      var(--color-purple-600)
-    );
-  }
-  50% {
-    background: linear-gradient(
-      to right,
-      var(--color-purple-600),
-      var(--color-primary)
-    );
-  }
+/* styles/globals.css */
+
+/* Container of the scrollbar */
+::-webkit-scrollbar {
+  width: 7px; /* width of the entire scrollbar */
+  height: 10px; /* height of the horizontal scrollbar */
 }
 
-@keyframes gradientLoopWizard {
-  0%,
-  100% {
-    background: linear-gradient(
-      to right,
-      var(--color-green-400),
-      var(--color-red-500)
-    );
-  }
-  50% {
-    background: linear-gradient(
-      to right,
-      var(--color-red-500),
-      var(--color-green-400)
-    );
-  }
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #f0bf1a;
+  border-radius: 5px; /* rounded corners */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a57e00; /* slightly lighter dark gray on hover */
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: #edf2f7; /* light gray */
+  border-radius: 5px; /* rounded corners */
+}
+
+/* Button at the top and bottom (buttons are hidden in this example) */
+::-webkit-scrollbar-button {
+  display: none; /* hides scrollbar buttons */
 }

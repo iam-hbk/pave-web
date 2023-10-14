@@ -1,16 +1,4 @@
-import axios from "axios";
-import { CreateClassSession } from "../interfaces";
-
-// Create an axios instance
-const apiClient = axios.create({
-  baseURL: "https://pave-server.onrender.com/api",
-  // baseURL: "https://pave-server.onrender.com/api",
-  headers: {
-    Accept: "*/*",
-    "Content-Type": "application/json",
-  },
-  maxBodyLength: Infinity,
-});
+import { apiClient } from ".";
 
 export async function getClassSessionByLecturerID(lecturerId: string) {
   try {
