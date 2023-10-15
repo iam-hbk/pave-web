@@ -55,9 +55,9 @@ export function NewSessionModal({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div>
-      <dialog open={isOpen} className="modal">
-        <div className="modal-box border-2 shadow-2xl">
+    <div className="z-50">
+      <dialog open={isOpen} className="modal z-50">
+        <div className="modal-box border-2 shadow-2xl z-50">
           <h3 className="text-lg font-bold">New Session</h3>
           <p className="py-4">Please enter the details</p>
 
