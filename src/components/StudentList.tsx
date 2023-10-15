@@ -9,10 +9,10 @@ export default function StudentList() {
       </div>
 
       {[
-        "Emmanuel James",
-        "Alice Jasmine",
-        "Harrison Menlaye",
-        "Jones Doherty",
+        "Emmanuel Mbuya",
+        "Heritier Kaumbu",
+        "Kenan Rasethaba",
+        "Christian Naidoo",
       ].map((name, idx) => (
         <div
           key={idx}

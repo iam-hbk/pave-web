@@ -14,9 +14,8 @@ const AttendanceRecord = ({ sessionId }: Props) => {
     ["attendance-register"],
     () => getAttendanceBySessionId(sessionId),
   );
-
-  const newSessionData = useSocket("newAttendance", () => {
-    alert("new attendance");
+  useSocket("newAttendance", (data:any) => {
+    console.log("newAttendance", data);
     refetch();
   });
 

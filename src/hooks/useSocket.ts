@@ -8,6 +8,8 @@ import {
   isUpdateChangeEvent,
   isDeleteChangeEvent,
 } from "@/utils/interfaces/socket";
+import { toast } from "sonner";
+import { formatDateString } from "@/utils/helpers";
 interface SocketCallback<SocketReturnType> {
   (data: SocketReturnType): void;
 }
@@ -22,8 +24,9 @@ const useSocket = (
     const socket = getSocket();
 
     // Set up the event listener
-    socket.on(event, (data: BaseChangeEvent) => {
-      console.log("EVENT:::", event);
+    // socket.on(event, (data: BaseChangeEvent) => {
+    socket.on(event, (data: any) => {
+    console.log("EVENT:::", event);
       setData(data);
       console.log("Data:::", data);
 
@@ -40,6 +43,11 @@ const useSocket = (
       }
 
       callback(data);
+      toast.success(`${data.studentName} signed the register at ${formatDateString(data.scanTime)}`,{
+        duration: 5000,
+        position: "top-right",
+        important: true,
+      })
     });
 
     // Remove the event listener when the component unmounts
@@ -48,7 +56,6 @@ const useSocket = (
     };
   }, [event, callback]);
 
-  return data;
 };
 
 export default useSocket;
