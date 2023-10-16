@@ -18,15 +18,15 @@ const CurrentClassSessions = () => {
     isLoading,
     isError,
     refetch,
-  } = useQuery(["sessions-results"], () =>
+  } = useQuery(["get-class-sessions"], () =>
     getClassSessionByLecturerID("651831d33acb0d7dd3434fde"),
   );
   const [newSessions, setNewSessions] = React.useState<string[]>([]);
   const [updatedSessions, setUpdatedSessions] = React.useState<string[]>([]);
 
-  useSocket("newClassSession", () => {
-    refetch();
-  });
+  // useSocket("newClassSession", () => {
+  //   refetch();
+  // });
 
   // React.useEffect(() => {
   //   if (newSessionData) {

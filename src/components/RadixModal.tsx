@@ -5,15 +5,29 @@ import { QRCodeOrigin } from "@/utils/interfaces";
 import QRCodeModal from "./QRCodeModal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { toast } from "sonner";
+import { useQueryClient } from "react-query";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
+function toLocalDateTimeString(date: Date): string {
+  const pad = (number: number): string =>
+    number < 10 ? "0" + number : number.toString();
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate(),
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
 
 export default function NewSessionModal({ isOpen, onClose }: Props) {
   const [startTime, setStartTime] = useState<Date>();
   const [endTime, setEndTime] = useState<Date>();
+  //
+  const queryClient = useQueryClient();
+  // States for display strings
+  const [displayStartTime, setDisplayStartTime] = useState<string>("");
+  const [displayEndTime, setDisplayEndTime] = useState<string>("");
+
   const [submitting, setSubmitting] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState<boolean>(false);
   const [QRCode_data, setQRCode_data] = useState("");
@@ -22,8 +36,8 @@ export default function NewSessionModal({ isOpen, onClose }: Props) {
     if (startTime) {
       const startDateTime = new Date(startTime);
       startDateTime.setMinutes(startDateTime.getMinutes() + 50);
-      startDateTime.setHours(startDateTime.getHours() + 2);
       setEndTime(startDateTime);
+      setDisplayEndTime(toLocalDateTimeString(startDateTime));
     }
   }, [startTime]);
   const getCoordinates = async (): Promise<QRCodeOrigin | null> => {
@@ -53,6 +67,7 @@ export default function NewSessionModal({ isOpen, onClose }: Props) {
       const data = await createClassSession(dataToSubmit);
       setQRCode_data(JSON.stringify(data.data));
       setIsQRModalOpen(true);
+      queryClient.invalidateQueries(["get-class-sessions"]);
       onClose();
     } catch (error) {
       toast.error((error as Error).message, {
@@ -87,8 +102,11 @@ export default function NewSessionModal({ isOpen, onClose }: Props) {
               type="datetime-local"
               id="start-time"
               name="start-time"
-              value={startTime?.toISOString().slice(0, 16) || ""}
-              onChange={(e) => setStartTime(new Date(e.target.value))}
+              value={displayStartTime}
+              onChange={(e) => {
+                setDisplayStartTime(e.target.value);
+                setStartTime(new Date(e.target.value));
+              }}
               className="rounded-md border p-2"
             />
           </div>
@@ -104,8 +122,11 @@ export default function NewSessionModal({ isOpen, onClose }: Props) {
               type="datetime-local"
               id="end-time"
               name="end-time"
-              value={endTime?.toISOString().slice(0, 16) || ""}
-              onChange={(e) => setEndTime(new Date(e.target.value))}
+              value={displayEndTime}
+              onChange={(e) => {
+                setDisplayEndTime(e.target.value);
+                setEndTime(new Date(e.target.value));
+              }}
               className="rounded-md border p-2"
             />
           </div>
