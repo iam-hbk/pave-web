@@ -47,6 +47,7 @@ export function NewSessionModal({ isOpen, onClose }: Props) {
       const data = await createClassSession(dataToSubmit);
       setQRCode_data(JSON.stringify(data.data));
       setIsQRModalOpen(true);
+      onClose();
     } catch (error) {
       console.error(error);
     } finally {

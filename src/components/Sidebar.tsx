@@ -10,7 +10,7 @@ export default function Sidebar() {
   const [openNewSession, setIsOpenNewSession] = useState(false);
 
   return (
-    <aside className=" m-2 mt-6 min-h-[92vh] w-full rounded-lg bg-white p-6 shadow-xl">
+    <aside className="z-50 m-2 mt-6 min-h-[92vh] w-full rounded-lg bg-white p-6 shadow-xl">
       {/* Logo */}
       <div className="mb-6">
         <Image

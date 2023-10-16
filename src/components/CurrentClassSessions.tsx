@@ -24,20 +24,20 @@ const CurrentClassSessions = () => {
   const [newSessions, setNewSessions] = React.useState<string[]>([]);
   const [updatedSessions, setUpdatedSessions] = React.useState<string[]>([]);
 
-  const newSessionData = useSocket("newClassSession", () => {
+  useSocket("newClassSession", () => {
     refetch();
   });
 
-  React.useEffect(() => {
-    if (newSessionData) {
-      console.log("new data", newSessionData);
-      if (isInsertChangeEvent(newSessionData)) {
-        setNewSessions((prev) => [...prev, newSessionData.id]);
-      } else if (isUpdateChangeEvent(newSessionData)) {
-        setUpdatedSessions((prev) => [...prev, newSessionData.id]);
-      }
-    }
-  }, [newSessionData]);
+  // React.useEffect(() => {
+  //   if (newSessionData) {
+  //     console.log("new data", newSessionData);
+  //     if (isInsertChangeEvent(newSessionData)) {
+  //       setNewSessions((prev) => [...prev, newSessionData.id]);
+  //     } else if (isUpdateChangeEvent(newSessionData)) {
+  //       setUpdatedSessions((prev) => [...prev, newSessionData.id]);
+  //     }
+  //   }
+  // }, [newSessionData]);
   if (isLoading)
     return (
       <div className="grid w-full place-items-center p-5">

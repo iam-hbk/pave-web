@@ -43,7 +43,7 @@ const useSocket = (
       }
 
       callback(data);
-      toast.success(`${data.studentName} signed the register at ${formatDateString(data.scanTime)}`,{
+      toast.success(`${data.studentName} signed the register at ${formatTimeToGMTPlus2(data.scanTime)}`,{
         duration: 5000,
         position: "top-right",
         important: true,
@@ -59,3 +59,18 @@ const useSocket = (
 };
 
 export default useSocket;
+
+
+export function formatTimeToGMTPlus2(dateString:string) {
+  // Parse the date string into a Date object
+  const date = new Date(dateString);
+
+  // Convert to GMT+2 timezone by adding 2 hours (2 * 60 minutes * 60 seconds * 1000 milliseconds)
+  const dateInGMTPlus2 = new Date(date.getTime() + 2 * 60 * 60 * 1000);
+
+  // Use Intl.DateTimeFormat to format the time
+  const formatter = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Etc/GMT-2' });
+  const timeString = formatter.format(dateInGMTPlus2);
+
+  return `${timeString}`;
+}
