@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import { getSocket } from "@/utils/apis/socket";
 import {
@@ -26,7 +24,7 @@ const useSocket = (
     // Set up the event listener
     // socket.on(event, (data: BaseChangeEvent) => {
     socket.on(event, (data: any) => {
-    console.log("EVENT:::", event);
+      console.log("EVENT:::", event);
       setData(data);
       console.log("Data:::", data);
 
@@ -43,25 +41,28 @@ const useSocket = (
       }
 
       callback(data);
-      toast.success(`${data.studentName} signed the register at ${formatTimeToGMTPlus2(data.scanTime)}`,{
-        duration: 5000,
-        position: "top-right",
-        important: true,
-      })
+      toast.success(
+        `${data.studentName} signed the register at ${formatTimeToGMTPlus2(
+          data.scanTime,
+        )}`,
+        {
+          duration: 5000,
+          position: "top-right",
+          important: true,
+        },
+      );
     });
 
     // Remove the event listener when the component unmounts
     return () => {
       socket.off(event);
     };
-  }, [event, callback]);
-
+  });
 };
 
 export default useSocket;
 
-
-export function formatTimeToGMTPlus2(dateString:string) {
+export function formatTimeToGMTPlus2(dateString: string) {
   // Parse the date string into a Date object
   const date = new Date(dateString);
 
@@ -69,7 +70,11 @@ export function formatTimeToGMTPlus2(dateString:string) {
   const dateInGMTPlus2 = new Date(date.getTime() + 2 * 60 * 60 * 1000);
 
   // Use Intl.DateTimeFormat to format the time
-  const formatter = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Etc/GMT-2' });
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Etc/GMT-2",
+  });
   const timeString = formatter.format(dateInGMTPlus2);
 
   return `${timeString}`;

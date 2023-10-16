@@ -8,40 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
-    },
-    keyframes: {
-      gradientLoopForm: {
-        "0%": {
-          background:
-            "linear-gradient(to right, var(--color-primary), var(--color-purple-600))",
-        },
-        "50%": {
-          background:
-            "linear-gradient(to right, var(--color-purple-600), var(--color-primary))",
-        },
-        "100%": {
-          background:
-            "linear-gradient(to right, var(--color-primary), var(--color-purple-600))",
-        },
-      },
-      gradientLoopWizard: {
-        "0%": {
-          background:
-            "linear-gradient(to right, var(--color-green-400), var(--color-red-500))",
-        },
-        "50%": {
-          background:
-            "linear-gradient(to right, var(--color-red-500), var(--color-green-400))",
-        },
-        "100%": {
-          background:
-            "linear-gradient(to right, var(--color-green-400), var(--color-red-500))",
-        },
+    
+      animation: {
+        overlayShow: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentShow: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },
