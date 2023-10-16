@@ -15,6 +15,7 @@ interface QRCodeModalProps {
 const QRCodeModal: FC<QRCodeModalProps> = ({ id, data, isOpen, onClose }) => {
   const { SVG } = useQRCode();
   // data = encryptTheQrCode(data);
+
   useEffect(() => {
     const modal = document.getElementById(id) as HTMLDialogElement;
     if (isOpen && modal) {
@@ -51,9 +52,9 @@ const QRCodeModal: FC<QRCodeModalProps> = ({ id, data, isOpen, onClose }) => {
             className="btn ml-2"
             p-10
             onClick={() => {
-              const modal = document.getElementById(id) as HTMLDialogElement;
-              if (modal) modal.close();
-              onClose();
+              // onClose();
+              // const modal = document.getElementById(id) as HTMLDialogElement;
+              // if (modal) modal.close();
             }}
           >
             Close

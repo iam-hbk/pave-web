@@ -3,6 +3,7 @@ import { getCurrentLongLat } from "@/utils/helpers";
 import { createClassSession } from "@/utils/apis/sessions";
 import { QRCodeOrigin } from "@/utils/interfaces";
 import QRCodeModal from "./QRCodeModal";
+import { string } from "yup";
 
 interface Props {
   isOpen: boolean;
@@ -21,7 +22,6 @@ export function NewSessionModal({ isOpen, onClose }: Props) {
     if (startTime) {
       const startDateTime = new Date(startTime);
       startDateTime.setMinutes(startDateTime.getMinutes() + 50);
-      startDateTime.setHours(startDateTime.getHours() + 2);
       setEndTime(startDateTime);
     }
   }, [startTime]);
@@ -58,8 +58,8 @@ export function NewSessionModal({ isOpen, onClose }: Props) {
   return (
     <div className="z-50">
       <dialog open={isOpen} className="modal z-50">
-        <div className="modal-box border-2 shadow-2xl z-50">
-          <h3 className="text-lg font-bold">New Session</h3>
+        <div className="modal-box z-50 border-2 shadow-2xl">
+          <h3 className="text-lg font-bold">New +++Session</h3>
           <p className="py-4">Please enter the details</p>
 
           <div className="space-y-4">
@@ -74,8 +74,12 @@ export function NewSessionModal({ isOpen, onClose }: Props) {
                 type="datetime-local"
                 id="start-time"
                 name="start-time"
-                value={startTime?.toISOString().slice(0, 16) || ""}
-                onChange={(e) => setStartTime(new Date(e.target.value))}
+                value={startTime?.toLocaleString()}
+                // value={getLocalISOString(startTime) || ""}
+                onChange={(e) => {
+                  setStartTime(new Date(e.target.value));
+                  console.log("start time", startTime);
+                }}
                 className="rounded-md border p-2"
               />
             </div>
@@ -122,5 +126,22 @@ export function NewSessionModal({ isOpen, onClose }: Props) {
         onClose={() => setIsQRModalOpen(false)}
       />
     </div>
+  );
+}
+function getLocalISOString(inputDate?: string | Date): string {
+  console.log("inputDate", inputDate);
+  const date: Date = inputDate ? new Date(inputDate) : new Date();
+  const offset: number = date.getTimezoneOffset();
+  const absOffset: number = Math.abs(offset);
+  const sign: string = offset < 0 ? "+" : "-";
+  const pad = (number: number): string =>
+    number < 10 ? "0" + number : number.toString();
+  const offsetString: string = `${sign}${pad(Math.floor(absOffset / 60))}:${pad(
+    absOffset % 60,
+  )}`;
+
+  return (
+    new Date(date.getTime() - offset * 60000).toISOString().slice(0, 16) +
+    offsetString
   );
 }

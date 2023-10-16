@@ -2,9 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NewSessionModal } from "./NewSessionModal";
+import NewSessionModal from "./RadixModal";
+// import { NewSessionModal } from "./NewSessionModal";
 import { useState } from "react";
-
+import * as Dialog from "@radix-ui/react-dialog";
 export default function Sidebar() {
   const currentPath = usePathname().split("/")[2];
   const [openNewSession, setIsOpenNewSession] = useState(false);
@@ -41,18 +42,27 @@ export default function Sidebar() {
             {item.title}
           </Link>
         ))}
-        <button
-          onClick={() => setIsOpenNewSession(true)}
-          className="block w-full rounded p-2 text-left transition-all duration-300 hover:bg-gray-100"
-        >
-          New Session
-        </button>
+        {/* 
         {openNewSession && (
           <NewSessionModal
             isOpen={openNewSession}
             onClose={() => setIsOpenNewSession(false)}
           />
-        )}
+        )} */}
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <button
+              onClick={() => setIsOpenNewSession(true)}
+              className="block w-full rounded p-2 text-left transition-all duration-300 hover:bg-gray-100"
+            >
+              New Session
+            </button>
+          </Dialog.Trigger>
+          <NewSessionModal
+            isOpen={openNewSession}
+            onClose={() => setIsOpenNewSession(false)}
+          />
+        </Dialog.Root>
       </nav>
     </aside>
   );
