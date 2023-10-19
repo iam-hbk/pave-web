@@ -1,6 +1,6 @@
 <p align="center">
 <a href=https://github.com/iam-hbk/pave-web target="_blank">
-<img src='/placeholder.jpg' width="100%" alt="Banner" />
+<img src='/public/assets/svgs/Pave_Logo.svg' width="100%" alt="Banner" />
 </a>
 </p>
 
